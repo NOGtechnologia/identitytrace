@@ -1,0 +1,273 @@
+{
+  "report_type": "identitytrace.incident",
+  "tool_version": "0.1.0",
+  "generated_at": "2026-10-20T07:03:25.520491Z",
+  "dataset": "synthetic_cloudtrail.json",
+  "incident": {
+    "id": "INC-e6f73d2b09",
+    "title": "Versuch: CloudTrail-Protokollierung gestoppt: org-trail",
+    "severity": "high",
+    "status": "open",
+    "first_seen": "2026-09-15T11:00:00Z",
+    "last_seen": "2026-09-15T12:28:23Z",
+    "actors": [
+      "user:intern-readonly"
+    ],
+    "entities": [
+      "key:AKIA5INTERNRO000008",
+      "user:intern-readonly"
+    ],
+    "patterns": [],
+    "rule_ids": [
+      "IT-004"
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "F-IT-004-a1e6290c26bc",
+      "rule_id": "IT-004",
+      "rule_name": "Audit-Protokollierung deaktiviert oder verändert",
+      "severity": "high",
+      "title": "Versuch: CloudTrail-Protokollierung gestoppt: org-trail",
+      "description": "Eine Änderung an der Sicherheitsprotokollierung kann Spuren verwischen und schafft blinde Flecken.",
+      "rationale": "cloudtrail.amazonaws.com StopLogging am 2026-09-15T11:00:00+00:00 durch user:intern-readonly. Die Anfrage schlug fehl (AccessDenied); es wurde keine Änderung wirksam, der Versuch selbst ist aber auffällig.",
+      "event_ids": [
+        "3dd5186e-82b1-5c3c-85ab-e5a8eadf4640"
+      ],
+      "actor": "user:intern-readonly",
+      "targets": [
+        "logging:org-trail"
+      ],
+      "first_seen": "2026-09-15T11:00:00Z",
+      "last_seen": "2026-09-15T11:00:00Z",
+      "evidence": [
+        {
+          "event_id": "3dd5186e-82b1-5c3c-85ab-e5a8eadf4640",
+          "field": "eventName",
+          "value": "StopLogging"
+        },
+        {
+          "event_id": "3dd5186e-82b1-5c3c-85ab-e5a8eadf4640",
+          "field": "eventTime",
+          "value": "2026-09-15T11:00:00+00:00"
+        }
+      ],
+      "attempt_failed": true,
+      "mitre_attack": [
+        "T1562.008"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "3dd5186e-82b1-5c3c-85ab-e5a8eadf4640",
+      "timestamp": "2026-09-15T11:00:00Z",
+      "event_name": "StopLogging",
+      "event_source": "cloudtrail.amazonaws.com",
+      "actor": "user:intern-readonly",
+      "source_ip": "10.20.2.77",
+      "access_key_id": "AKIA5INTERNRO000008",
+      "outcome": "AccessDenied",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-004-a1e6290c26bc"
+      ],
+      "rule_ids": [
+        "IT-004"
+      ],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "3b5d0caa-5d58-5c2f-8e81-ee1975b325b4",
+      "timestamp": "2026-09-15T12:28:23Z",
+      "event_name": "ConsoleLogin",
+      "event_source": "signin.amazonaws.com",
+      "actor": "user:intern-readonly",
+      "source_ip": "10.20.2.77",
+      "access_key_id": null,
+      "outcome": "success",
+      "kind": "authentication",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "facts": [
+    {
+      "text": "2026-09-15 11:00:00 UTC: user:intern-readonly rief cloudtrail.amazonaws.com StopLogging auf mit Schlüssel AKIA5INTERNRO000008, Quell-IP 10.20.2.77, abgelehnt (AccessDenied).",
+      "event_ids": [
+        "3dd5186e-82b1-5c3c-85ab-e5a8eadf4640"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 12:28:23 UTC: user:intern-readonly rief signin.amazonaws.com ConsoleLogin auf, Quell-IP 10.20.2.77, erfolgreich.",
+      "event_ids": [
+        "3b5d0caa-5d58-5c2f-8e81-ee1975b325b4"
+      ],
+      "confidence": null
+    }
+  ],
+  "inferences": [
+    {
+      "text": "Alle auslösenden Anfragen wurden abgelehnt. Mögliche Ursachen sind Erkundung durch einen Angreifer oder ein Bedienfehler; die Logs unterscheiden das nicht.",
+      "event_ids": [
+        "3dd5186e-82b1-5c3c-85ab-e5a8eadf4640"
+      ],
+      "confidence": "niedrig"
+    }
+  ],
+  "gaps": [
+    {
+      "text": "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "event_ids": [],
+      "confidence": null
+    },
+    {
+      "text": "Wie user:intern-readonly an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen).",
+      "event_ids": [],
+      "confidence": null
+    }
+  ],
+  "evidence_events": [
+    {
+      "event_id": "3dd5186e-82b1-5c3c-85ab-e5a8eadf4640",
+      "timestamp": "2026-09-15T11:00:00Z",
+      "event_source": "cloudtrail.amazonaws.com",
+      "event_name": "StopLogging",
+      "actor": "user:intern-readonly",
+      "access_key_id": "AKIA5INTERNRO000008",
+      "source_ip": "10.20.2.77",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": "AccessDenied",
+      "request_parameters": {
+        "name": "arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail"
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "data_quality": {
+    "total_records": 452,
+    "unusable_events": 4,
+    "issue_counts": {
+      "missing_user_identity": 1,
+      "missing_event_time": 1,
+      "malformed_record": 1,
+      "invalid_event_time": 1
+    },
+    "time_gaps": [
+      {
+        "start": "2026-09-14T21:49:41Z",
+        "end": "2026-09-15T04:32:42Z",
+        "duration_minutes": 403.0,
+        "reason": "no_events"
+      }
+    ],
+    "instruction_like_event_ids": [
+      "02e31dee-4ec7-5442-88f1-b18aa0b7be83",
+      "d5a92d20-7e9f-505a-868c-85cc373039ee"
+    ],
+    "has_data_events": true
+  },
+  "recommendations": [
+    {
+      "rec_id": "restore-logging:arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+      "title": "Protokollierung wiederherstellen und Lücke bewerten",
+      "rationale": "cloudtrail.amazonaws.com StopLogging am 2026-09-15T11:00:00+00:00 durch user:intern-readonly. Die Anfrage schlug fehl (AccessDenied); es wurde keine Änderung wirksam, der Versuch selbst ist aber auffällig.",
+      "verify_steps": [
+        "aws cloudtrail get-trail-status --name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+        "aws cloudtrail get-event-selectors --trail-name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+        "Für die Zeit ohne Protokollierung andere Quellen prüfen (Config, VPC Flow Logs, Anwendungslogs)"
+      ],
+      "change_steps": [],
+      "requires_approval": false,
+      "related_finding_ids": [
+        "F-IT-004-a1e6290c26bc"
+      ],
+      "approval": null
+    },
+    {
+      "rec_id": "contain-actor:user:intern-readonly",
+      "title": "Zugangsdaten von user:intern-readonly prüfen",
+      "rationale": "Der Akteur hat auslösende Ereignisse verursacht. Ob die Zugangsdaten kompromittiert sind, ist offen.",
+      "verify_steps": [
+        "aws iam list-access-keys --user-name intern-readonly",
+        "aws iam list-mfa-devices --user-name intern-readonly",
+        "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+      ],
+      "change_steps": [
+        "Aktive Schlüssel von intern-readonly deaktivieren (update-access-key --status Inactive)",
+        "Konsolen-Passwort zurücksetzen und MFA neu registrieren"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [],
+      "approval": null
+    }
+  ],
+  "investigation_log": [
+    {
+      "timestamp": "2026-10-20T07:03:25.520491Z",
+      "analyst": "demo",
+      "action": "report_exported",
+      "note": "Bericht per CLI erzeugt",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-20T07:03:25.520491Z",
+      "analyst": "demo",
+      "action": "ai_analysis",
+      "note": "KI-Analyse (offline-template)",
+      "details": {}
+    }
+  ],
+  "remediation": null,
+  "ai_analysis": {
+    "provider": "offline-template",
+    "summary": "1 Finding(s) aus den Regeln IT-004 betreffen user:intern-readonly. Die Zeitleiste umfasst 2 Ereignisse, davon 1 auslösend. Schweregrad laut Regeln: high.",
+    "facts": [
+      {
+        "text": "2026-09-15 11:00:00 UTC: user:intern-readonly rief cloudtrail.amazonaws.com StopLogging auf mit Schlüssel AKIA5INTERNRO000008, Quell-IP 10.20.2.77, abgelehnt (AccessDenied).",
+        "event_ids": [
+          "3dd5186e-82b1-5c3c-85ab-e5a8eadf4640"
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "text": "Alle auslösenden Anfragen wurden abgelehnt. Mögliche Ursachen sind Erkundung durch einen Angreifer oder ein Bedienfehler; die Logs unterscheiden das nicht.",
+        "event_ids": [
+          "3dd5186e-82b1-5c3c-85ab-e5a8eadf4640"
+        ],
+        "confidence": "niedrig"
+      }
+    ],
+    "uncertainties": [
+      "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "Wie user:intern-readonly an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen)."
+    ],
+    "investigation_steps": [
+      "aws cloudtrail get-trail-status --name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+      "aws cloudtrail get-event-selectors --trail-name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+      "Für die Zeit ohne Protokollierung andere Quellen prüfen (Config, VPC Flow Logs, Anwendungslogs)",
+      "aws iam list-access-keys --user-name intern-readonly",
+      "aws iam list-mfa-devices --user-name intern-readonly",
+      "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+    ],
+    "remediation_suggestions": [
+      {
+        "text": "Protokollierung wiederherstellen und Lücke bewerten",
+        "requires_approval": true
+      },
+      {
+        "text": "Zugangsdaten von user:intern-readonly prüfen",
+        "requires_approval": true
+      }
+    ],
+    "manipulation_indicators": [],
+    "validation_warnings": [],
+    "advisory_only": true
+  },
+  "disclaimer": "IdentityTrace hat keine Änderungen an Cloud-Ressourcen vorgenommen. Empfehlungen mit Freigabevermerk wurden von Menschen außerhalb des Tools umgesetzt und hier dokumentiert."
+}

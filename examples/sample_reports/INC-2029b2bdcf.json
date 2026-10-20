@@ -1,0 +1,281 @@
+{
+  "report_type": "identitytrace.incident",
+  "tool_version": "0.1.0",
+  "generated_at": "2026-10-20T07:03:25.520491Z",
+  "dataset": "synthetic_cloudtrail.json",
+  "incident": {
+    "id": "INC-2029b2bdcf",
+    "title": "Ungewöhnlich weitreichende Berechtigungen für user:dev-jsmith (+1 weitere Findings)",
+    "severity": "high",
+    "status": "open",
+    "first_seen": "2026-09-15T10:30:00Z",
+    "last_seen": "2026-09-15T10:30:00Z",
+    "actors": [
+      "user:dev-jsmith"
+    ],
+    "entities": [
+      "key:AKIA5DEVJSMITH00005",
+      "user:dev-jsmith"
+    ],
+    "patterns": [],
+    "rule_ids": [
+      "IT-002",
+      "IT-005"
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "F-IT-002-3106e1964d4e",
+      "rule_id": "IT-002",
+      "rule_name": "Ungewöhnlich weitreichende Berechtigungen",
+      "severity": "high",
+      "title": "Ungewöhnlich weitreichende Berechtigungen für user:dev-jsmith",
+      "description": "Eine Policy gewährt Wildcard-Rechte auf alle Aktionen oder auf sicherheitskritische Dienste.",
+      "rationale": "PutUserPolicy enthält: Action \"iam:*\" auf Resource \"*\".",
+      "event_ids": [
+        "e7944371-f32d-5ce4-ae91-64e5945e9ec4"
+      ],
+      "actor": "user:dev-jsmith",
+      "targets": [
+        "user:dev-jsmith"
+      ],
+      "first_seen": "2026-09-15T10:30:00Z",
+      "last_seen": "2026-09-15T10:30:00Z",
+      "evidence": [
+        {
+          "event_id": "e7944371-f32d-5ce4-ae91-64e5945e9ec4",
+          "field": "requestParameters.policyDocument",
+          "value": [
+            "Action \"iam:*\" auf Resource \"*\""
+          ]
+        },
+        {
+          "event_id": "e7944371-f32d-5ce4-ae91-64e5945e9ec4",
+          "field": "requestParameters.policyName",
+          "value": "self-boost"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1098"
+      ]
+    },
+    {
+      "finding_id": "F-IT-005-7297755c9075",
+      "rule_id": "IT-005",
+      "rule_name": "Benutzer verändert eigene Berechtigungen",
+      "severity": "high",
+      "title": "user:dev-jsmith ändert die eigenen Berechtigungen",
+      "description": "Eine Identität hat ihre eigenen Rechte verändert. Das umgeht das Vier-Augen-Prinzip.",
+      "rationale": "Akteur (user:dev-jsmith) und Ziel von PutUserPolicy sind identisch.",
+      "event_ids": [
+        "e7944371-f32d-5ce4-ae91-64e5945e9ec4"
+      ],
+      "actor": "user:dev-jsmith",
+      "targets": [
+        "user:dev-jsmith"
+      ],
+      "first_seen": "2026-09-15T10:30:00Z",
+      "last_seen": "2026-09-15T10:30:00Z",
+      "evidence": [
+        {
+          "event_id": "e7944371-f32d-5ce4-ae91-64e5945e9ec4",
+          "field": "userIdentity",
+          "value": "user:dev-jsmith"
+        },
+        {
+          "event_id": "e7944371-f32d-5ce4-ae91-64e5945e9ec4",
+          "field": "requestParameters",
+          "value": [
+            "user:dev-jsmith"
+          ]
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1098"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "e7944371-f32d-5ce4-ae91-64e5945e9ec4",
+      "timestamp": "2026-09-15T10:30:00Z",
+      "event_name": "PutUserPolicy",
+      "event_source": "iam.amazonaws.com",
+      "actor": "user:dev-jsmith",
+      "source_ip": "10.20.2.41",
+      "access_key_id": "AKIA5DEVJSMITH00005",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-002-3106e1964d4e",
+        "F-IT-005-7297755c9075"
+      ],
+      "rule_ids": [
+        "IT-002",
+        "IT-005"
+      ],
+      "instruction_like_fields": []
+    }
+  ],
+  "facts": [
+    {
+      "text": "2026-09-15 10:30:00 UTC: user:dev-jsmith rief iam.amazonaws.com PutUserPolicy auf user:dev-jsmith auf mit Schlüssel AKIA5DEVJSMITH00005, Quell-IP 10.20.2.41, erfolgreich.",
+      "event_ids": [
+        "e7944371-f32d-5ce4-ae91-64e5945e9ec4"
+      ],
+      "confidence": null
+    }
+  ],
+  "inferences": [],
+  "gaps": [
+    {
+      "text": "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "event_ids": [],
+      "confidence": null
+    },
+    {
+      "text": "Wie user:dev-jsmith an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen).",
+      "event_ids": [],
+      "confidence": null
+    }
+  ],
+  "evidence_events": [
+    {
+      "event_id": "e7944371-f32d-5ce4-ae91-64e5945e9ec4",
+      "timestamp": "2026-09-15T10:30:00Z",
+      "event_source": "iam.amazonaws.com",
+      "event_name": "PutUserPolicy",
+      "actor": "user:dev-jsmith",
+      "access_key_id": "AKIA5DEVJSMITH00005",
+      "source_ip": "10.20.2.41",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": null,
+      "request_parameters": {
+        "userName": "dev-jsmith",
+        "policyName": "self-boost",
+        "policyDocument": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"iam:*\", \"Resource\": \"*\"}]}"
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "data_quality": {
+    "total_records": 452,
+    "unusable_events": 4,
+    "issue_counts": {
+      "missing_user_identity": 1,
+      "missing_event_time": 1,
+      "malformed_record": 1,
+      "invalid_event_time": 1
+    },
+    "time_gaps": [
+      {
+        "start": "2026-09-14T21:49:41Z",
+        "end": "2026-09-15T04:32:42Z",
+        "duration_minutes": 403.0,
+        "reason": "no_events"
+      }
+    ],
+    "instruction_like_event_ids": [
+      "02e31dee-4ec7-5442-88f1-b18aa0b7be83",
+      "d5a92d20-7e9f-505a-868c-85cc373039ee"
+    ],
+    "has_data_events": true
+  },
+  "recommendations": [
+    {
+      "rec_id": "revert-permissions:user:dev-jsmith",
+      "title": "Berechtigungen von user:dev-jsmith prüfen und ggf. zurücksetzen",
+      "rationale": "IT-002: PutUserPolicy enthält: Action \"iam:*\" auf Resource \"*\".",
+      "verify_steps": [
+        "aws iam list-attached-user-policies --user-name dev-jsmith",
+        "aws iam list-user-policies --user-name dev-jsmith",
+        "Change-Ticket bzw. Freigabe für die Änderung suchen"
+      ],
+      "change_steps": [
+        "aws iam delete-user-policy --user-name dev-jsmith --policy-name self-boost"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [
+        "F-IT-002-3106e1964d4e"
+      ],
+      "approval": null
+    },
+    {
+      "rec_id": "contain-actor:user:dev-jsmith",
+      "title": "Zugangsdaten von user:dev-jsmith prüfen",
+      "rationale": "Der Akteur hat auslösende Ereignisse verursacht. Ob die Zugangsdaten kompromittiert sind, ist offen.",
+      "verify_steps": [
+        "aws iam list-access-keys --user-name dev-jsmith",
+        "aws iam list-mfa-devices --user-name dev-jsmith",
+        "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+      ],
+      "change_steps": [
+        "Aktive Schlüssel von dev-jsmith deaktivieren (update-access-key --status Inactive)",
+        "Konsolen-Passwort zurücksetzen und MFA neu registrieren"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [],
+      "approval": null
+    }
+  ],
+  "investigation_log": [
+    {
+      "timestamp": "2026-10-20T07:03:25.520491Z",
+      "analyst": "demo",
+      "action": "report_exported",
+      "note": "Bericht per CLI erzeugt",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-20T07:03:25.520491Z",
+      "analyst": "demo",
+      "action": "ai_analysis",
+      "note": "KI-Analyse (offline-template)",
+      "details": {}
+    }
+  ],
+  "remediation": null,
+  "ai_analysis": {
+    "provider": "offline-template",
+    "summary": "2 Finding(s) aus den Regeln IT-002, IT-005 betreffen user:dev-jsmith. Die Zeitleiste umfasst 1 Ereignisse, davon 1 auslösend. Schweregrad laut Regeln: high.",
+    "facts": [
+      {
+        "text": "2026-09-15 10:30:00 UTC: user:dev-jsmith rief iam.amazonaws.com PutUserPolicy auf user:dev-jsmith auf mit Schlüssel AKIA5DEVJSMITH00005, Quell-IP 10.20.2.41, erfolgreich.",
+        "event_ids": [
+          "e7944371-f32d-5ce4-ae91-64e5945e9ec4"
+        ]
+      }
+    ],
+    "hypotheses": [],
+    "uncertainties": [
+      "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "Wie user:dev-jsmith an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen)."
+    ],
+    "investigation_steps": [
+      "aws iam list-attached-user-policies --user-name dev-jsmith",
+      "aws iam list-user-policies --user-name dev-jsmith",
+      "Change-Ticket bzw. Freigabe für die Änderung suchen",
+      "aws iam list-access-keys --user-name dev-jsmith",
+      "aws iam list-mfa-devices --user-name dev-jsmith",
+      "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+    ],
+    "remediation_suggestions": [
+      {
+        "text": "Berechtigungen von user:dev-jsmith prüfen und ggf. zurücksetzen",
+        "requires_approval": true
+      },
+      {
+        "text": "Zugangsdaten von user:dev-jsmith prüfen",
+        "requires_approval": true
+      }
+    ],
+    "manipulation_indicators": [],
+    "validation_warnings": [],
+    "advisory_only": true
+  },
+  "disclaimer": "IdentityTrace hat keine Änderungen an Cloud-Ressourcen vorgenommen. Empfehlungen mit Freigabevermerk wurden von Menschen außerhalb des Tools umgesetzt und hier dokumentiert."
+}

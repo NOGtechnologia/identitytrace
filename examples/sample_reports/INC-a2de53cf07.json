@@ -1,0 +1,267 @@
+{
+  "report_type": "identitytrace.incident",
+  "tool_version": "0.1.0",
+  "generated_at": "2026-10-20T07:03:25.513160Z",
+  "dataset": "synthetic_cloudtrail.json",
+  "incident": {
+    "id": "INC-a2de53cf07",
+    "title": "Neue privilegierte Rolle data-team-role angelegt",
+    "severity": "high",
+    "status": "open",
+    "first_seen": "2026-09-14T09:30:00Z",
+    "last_seen": "2026-09-14T09:30:20Z",
+    "actors": [
+      "role:iam-provisioner"
+    ],
+    "entities": [
+      "role:data-team-role",
+      "role:iam-provisioner"
+    ],
+    "patterns": [],
+    "rule_ids": [
+      "IT-001"
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "F-IT-001-cfd442115970",
+      "rule_id": "IT-001",
+      "rule_name": "Privilegierte Rolle angelegt oder verändert",
+      "severity": "high",
+      "title": "Neue privilegierte Rolle data-team-role angelegt",
+      "description": "Eine Rolle wurde neu angelegt und kurz darauf mit administrativen Rechten ausgestattet.",
+      "rationale": "AttachRolePolicy mit policyArn arn:aws:iam::aws:policy/PowerUserAccess, die in der Liste privilegierter Policies steht.",
+      "event_ids": [
+        "3a33488f-a4ed-5815-9373-0279a0c542ec",
+        "499488bd-ba23-5445-8551-ad002dd5ff5f"
+      ],
+      "actor": "role:iam-provisioner",
+      "targets": [
+        "role:data-team-role"
+      ],
+      "first_seen": "2026-09-14T09:30:00Z",
+      "last_seen": "2026-09-14T09:30:20Z",
+      "evidence": [
+        {
+          "event_id": "499488bd-ba23-5445-8551-ad002dd5ff5f",
+          "field": "requestParameters.policyArn",
+          "value": "arn:aws:iam::aws:policy/PowerUserAccess"
+        },
+        {
+          "event_id": "3a33488f-a4ed-5815-9373-0279a0c542ec",
+          "field": "eventName",
+          "value": "CreateRole"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1098",
+        "T1098.003"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "3a33488f-a4ed-5815-9373-0279a0c542ec",
+      "timestamp": "2026-09-14T09:30:00Z",
+      "event_name": "CreateRole",
+      "event_source": "iam.amazonaws.com",
+      "actor": "role:iam-provisioner",
+      "source_ip": "52.29.10.11",
+      "access_key_id": "ASIAAFB8F69000FD5B97",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-001-cfd442115970"
+      ],
+      "rule_ids": [
+        "IT-001"
+      ],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "499488bd-ba23-5445-8551-ad002dd5ff5f",
+      "timestamp": "2026-09-14T09:30:20Z",
+      "event_name": "AttachRolePolicy",
+      "event_source": "iam.amazonaws.com",
+      "actor": "role:iam-provisioner",
+      "source_ip": "52.29.10.11",
+      "access_key_id": "ASIAAFB8F69000FD5B97",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-001-cfd442115970"
+      ],
+      "rule_ids": [
+        "IT-001"
+      ],
+      "instruction_like_fields": []
+    }
+  ],
+  "facts": [
+    {
+      "text": "2026-09-14 09:30:00 UTC: role:iam-provisioner rief iam.amazonaws.com CreateRole auf role:data-team-role auf mit Schlüssel ASIAAFB8F69000FD5B97, Quell-IP 52.29.10.11, erfolgreich.",
+      "event_ids": [
+        "3a33488f-a4ed-5815-9373-0279a0c542ec"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 09:30:20 UTC: role:iam-provisioner rief iam.amazonaws.com AttachRolePolicy auf role:data-team-role, policyArn=arn:aws:iam::aws:policy/PowerUserAccess auf mit Schlüssel ASIAAFB8F69000FD5B97, Quell-IP 52.29.10.11, erfolgreich.",
+      "event_ids": [
+        "499488bd-ba23-5445-8551-ad002dd5ff5f"
+      ],
+      "confidence": null
+    }
+  ],
+  "inferences": [],
+  "gaps": [
+    {
+      "text": "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "event_ids": [],
+      "confidence": null
+    },
+    {
+      "text": "Wie role:iam-provisioner an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen).",
+      "event_ids": [],
+      "confidence": null
+    }
+  ],
+  "evidence_events": [
+    {
+      "event_id": "3a33488f-a4ed-5815-9373-0279a0c542ec",
+      "timestamp": "2026-09-14T09:30:00Z",
+      "event_source": "iam.amazonaws.com",
+      "event_name": "CreateRole",
+      "actor": "role:iam-provisioner",
+      "access_key_id": "ASIAAFB8F69000FD5B97",
+      "source_ip": "52.29.10.11",
+      "user_agent": "Terraform/1.9.5",
+      "error_code": null,
+      "request_parameters": {
+        "roleName": "data-team-role",
+        "assumeRolePolicyDocument": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Principal\": {\"Service\": \"ec2.amazonaws.com\"}, \"Action\": \"sts:AssumeRole\"}]}",
+        "description": "CHG-2231 data team workload role"
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "499488bd-ba23-5445-8551-ad002dd5ff5f",
+      "timestamp": "2026-09-14T09:30:20Z",
+      "event_source": "iam.amazonaws.com",
+      "event_name": "AttachRolePolicy",
+      "actor": "role:iam-provisioner",
+      "access_key_id": "ASIAAFB8F69000FD5B97",
+      "source_ip": "52.29.10.11",
+      "user_agent": "Terraform/1.9.5",
+      "error_code": null,
+      "request_parameters": {
+        "roleName": "data-team-role",
+        "policyArn": "arn:aws:iam::aws:policy/PowerUserAccess"
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "data_quality": {
+    "total_records": 452,
+    "unusable_events": 4,
+    "issue_counts": {
+      "missing_user_identity": 1,
+      "missing_event_time": 1,
+      "malformed_record": 1,
+      "invalid_event_time": 1
+    },
+    "time_gaps": [
+      {
+        "start": "2026-09-14T21:49:41Z",
+        "end": "2026-09-15T04:32:42Z",
+        "duration_minutes": 403.0,
+        "reason": "no_events"
+      }
+    ],
+    "instruction_like_event_ids": [
+      "02e31dee-4ec7-5442-88f1-b18aa0b7be83",
+      "d5a92d20-7e9f-505a-868c-85cc373039ee"
+    ],
+    "has_data_events": true
+  },
+  "recommendations": [
+    {
+      "rec_id": "revert-permissions:role:data-team-role",
+      "title": "Berechtigungen von role:data-team-role prüfen und ggf. zurücksetzen",
+      "rationale": "IT-001: AttachRolePolicy mit policyArn arn:aws:iam::aws:policy/PowerUserAccess, die in der Liste privilegierter Policies steht.",
+      "verify_steps": [
+        "aws iam list-attached-role-policies --role-name data-team-role",
+        "aws iam list-role-policies --role-name data-team-role",
+        "Change-Ticket bzw. Freigabe für die Änderung suchen"
+      ],
+      "change_steps": [
+        "aws iam detach-role-policy --role-name data-team-role --policy-arn arn:aws:iam::aws:policy/PowerUserAccess"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [
+        "F-IT-001-cfd442115970"
+      ],
+      "approval": null
+    }
+  ],
+  "investigation_log": [
+    {
+      "timestamp": "2026-10-20T07:03:25.513160Z",
+      "analyst": "demo",
+      "action": "report_exported",
+      "note": "Bericht per CLI erzeugt",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-20T07:03:25.513160Z",
+      "analyst": "demo",
+      "action": "ai_analysis",
+      "note": "KI-Analyse (offline-template)",
+      "details": {}
+    }
+  ],
+  "remediation": null,
+  "ai_analysis": {
+    "provider": "offline-template",
+    "summary": "1 Finding(s) aus den Regeln IT-001 betreffen role:iam-provisioner. Die Zeitleiste umfasst 2 Ereignisse, davon 2 auslösend. Schweregrad laut Regeln: high.",
+    "facts": [
+      {
+        "text": "2026-09-14 09:30:00 UTC: role:iam-provisioner rief iam.amazonaws.com CreateRole auf role:data-team-role auf mit Schlüssel ASIAAFB8F69000FD5B97, Quell-IP 52.29.10.11, erfolgreich.",
+        "event_ids": [
+          "3a33488f-a4ed-5815-9373-0279a0c542ec"
+        ]
+      },
+      {
+        "text": "2026-09-14 09:30:20 UTC: role:iam-provisioner rief iam.amazonaws.com AttachRolePolicy auf role:data-team-role, policyArn=arn:aws:iam::aws:policy/PowerUserAccess auf mit Schlüssel ASIAAFB8F69000FD5B97, Quell-IP 52.29.10.11, erfolgreich.",
+        "event_ids": [
+          "499488bd-ba23-5445-8551-ad002dd5ff5f"
+        ]
+      }
+    ],
+    "hypotheses": [],
+    "uncertainties": [
+      "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "Wie role:iam-provisioner an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen)."
+    ],
+    "investigation_steps": [
+      "aws iam list-attached-role-policies --role-name data-team-role",
+      "aws iam list-role-policies --role-name data-team-role",
+      "Change-Ticket bzw. Freigabe für die Änderung suchen"
+    ],
+    "remediation_suggestions": [
+      {
+        "text": "Berechtigungen von role:data-team-role prüfen und ggf. zurücksetzen",
+        "requires_approval": true
+      }
+    ],
+    "manipulation_indicators": [],
+    "validation_warnings": [],
+    "advisory_only": true
+  },
+  "disclaimer": "IdentityTrace hat keine Änderungen an Cloud-Ressourcen vorgenommen. Empfehlungen mit Freigabevermerk wurden von Menschen außerhalb des Tools umgesetzt und hier dokumentiert."
+}

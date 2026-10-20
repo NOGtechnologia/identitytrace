@@ -1,0 +1,354 @@
+{
+  "report_type": "identitytrace.incident",
+  "tool_version": "0.1.0",
+  "generated_at": "2026-10-20T07:03:25.513160Z",
+  "dataset": "synthetic_cloudtrail.json",
+  "incident": {
+    "id": "INC-6838a07ce8",
+    "title": "Neue privilegierte Rolle ops-automation-admin angelegt",
+    "severity": "high",
+    "status": "open",
+    "first_seen": "2026-09-14T08:22:33Z",
+    "last_seen": "2026-09-14T14:40:34Z",
+    "actors": [
+      "user:alice.meyer"
+    ],
+    "entities": [
+      "key:AKIA5ALICEMEYER0001",
+      "role:ops-automation-admin",
+      "user:alice.meyer"
+    ],
+    "patterns": [],
+    "rule_ids": [
+      "IT-001"
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "F-IT-001-ad6072c19933",
+      "rule_id": "IT-001",
+      "rule_name": "Privilegierte Rolle angelegt oder verändert",
+      "severity": "high",
+      "title": "Neue privilegierte Rolle ops-automation-admin angelegt",
+      "description": "Eine Rolle wurde neu angelegt und kurz darauf mit administrativen Rechten ausgestattet.",
+      "rationale": "AttachRolePolicy mit policyArn arn:aws:iam::aws:policy/AdministratorAccess, die in der Liste privilegierter Policies steht.",
+      "event_ids": [
+        "ed7c6d01-d54d-5575-b743-c25117b957a9",
+        "bb4d25a6-29ab-562d-b506-553ca3ec45d1"
+      ],
+      "actor": "user:alice.meyer",
+      "targets": [
+        "role:ops-automation-admin"
+      ],
+      "first_seen": "2026-09-14T10:15:00Z",
+      "last_seen": "2026-09-14T10:16:00Z",
+      "evidence": [
+        {
+          "event_id": "bb4d25a6-29ab-562d-b506-553ca3ec45d1",
+          "field": "requestParameters.policyArn",
+          "value": "arn:aws:iam::aws:policy/AdministratorAccess"
+        },
+        {
+          "event_id": "ed7c6d01-d54d-5575-b743-c25117b957a9",
+          "field": "eventName",
+          "value": "CreateRole"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1098",
+        "T1098.003"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "48f3e687-a54d-572e-adac-475e6c7ec193",
+      "timestamp": "2026-09-14T08:22:33Z",
+      "event_name": "ConsoleLogin",
+      "event_source": "signin.amazonaws.com",
+      "actor": "user:alice.meyer",
+      "source_ip": "10.20.1.15",
+      "access_key_id": null,
+      "outcome": "success",
+      "kind": "authentication",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "ed7c6d01-d54d-5575-b743-c25117b957a9",
+      "timestamp": "2026-09-14T10:15:00Z",
+      "event_name": "CreateRole",
+      "event_source": "iam.amazonaws.com",
+      "actor": "user:alice.meyer",
+      "source_ip": "10.20.1.15",
+      "access_key_id": "AKIA5ALICEMEYER0001",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-001-ad6072c19933"
+      ],
+      "rule_ids": [
+        "IT-001"
+      ],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "bb4d25a6-29ab-562d-b506-553ca3ec45d1",
+      "timestamp": "2026-09-14T10:16:00Z",
+      "event_name": "AttachRolePolicy",
+      "event_source": "iam.amazonaws.com",
+      "actor": "user:alice.meyer",
+      "source_ip": "10.20.1.15",
+      "access_key_id": "AKIA5ALICEMEYER0001",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-001-ad6072c19933"
+      ],
+      "rule_ids": [
+        "IT-001"
+      ],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "9f843027-3438-5b8b-8693-5ad5b9c58c97",
+      "timestamp": "2026-09-14T14:21:35Z",
+      "event_name": "GetCallerIdentity",
+      "event_source": "sts.amazonaws.com",
+      "actor": "user:alice.meyer",
+      "source_ip": "10.20.1.15",
+      "access_key_id": "AKIA5ALICEMEYER0001",
+      "outcome": "success",
+      "kind": "reconnaissance",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "efa902c7-da2a-59de-add4-cb628c1f50a1",
+      "timestamp": "2026-09-14T14:40:34Z",
+      "event_name": "ConsoleLogin",
+      "event_source": "signin.amazonaws.com",
+      "actor": "user:alice.meyer",
+      "source_ip": "10.20.1.15",
+      "access_key_id": null,
+      "outcome": "success",
+      "kind": "authentication",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "facts": [
+    {
+      "text": "2026-09-14 08:22:33 UTC: user:alice.meyer rief signin.amazonaws.com ConsoleLogin auf, Quell-IP 10.20.1.15, erfolgreich.",
+      "event_ids": [
+        "48f3e687-a54d-572e-adac-475e6c7ec193"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 10:15:00 UTC: user:alice.meyer rief iam.amazonaws.com CreateRole auf role:ops-automation-admin auf mit Schlüssel AKIA5ALICEMEYER0001, Quell-IP 10.20.1.15, erfolgreich.",
+      "event_ids": [
+        "ed7c6d01-d54d-5575-b743-c25117b957a9"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 10:16:00 UTC: user:alice.meyer rief iam.amazonaws.com AttachRolePolicy auf role:ops-automation-admin, policyArn=arn:aws:iam::aws:policy/AdministratorAccess auf mit Schlüssel AKIA5ALICEMEYER0001, Quell-IP 10.20.1.15, erfolgreich.",
+      "event_ids": [
+        "bb4d25a6-29ab-562d-b506-553ca3ec45d1"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 14:21:35 UTC: user:alice.meyer rief sts.amazonaws.com GetCallerIdentity auf mit Schlüssel AKIA5ALICEMEYER0001, Quell-IP 10.20.1.15, erfolgreich.",
+      "event_ids": [
+        "9f843027-3438-5b8b-8693-5ad5b9c58c97"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 14:40:34 UTC: user:alice.meyer rief signin.amazonaws.com ConsoleLogin auf, Quell-IP 10.20.1.15, erfolgreich.",
+      "event_ids": [
+        "efa902c7-da2a-59de-add4-cb628c1f50a1"
+      ],
+      "confidence": null
+    }
+  ],
+  "inferences": [],
+  "gaps": [
+    {
+      "text": "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "event_ids": [],
+      "confidence": null
+    },
+    {
+      "text": "Wie user:alice.meyer an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen).",
+      "event_ids": [],
+      "confidence": null
+    }
+  ],
+  "evidence_events": [
+    {
+      "event_id": "ed7c6d01-d54d-5575-b743-c25117b957a9",
+      "timestamp": "2026-09-14T10:15:00Z",
+      "event_source": "iam.amazonaws.com",
+      "event_name": "CreateRole",
+      "actor": "user:alice.meyer",
+      "access_key_id": "AKIA5ALICEMEYER0001",
+      "source_ip": "10.20.1.15",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": null,
+      "request_parameters": {
+        "roleName": "ops-automation-admin",
+        "assumeRolePolicyDocument": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Principal\": {\"AWS\": \"arn:aws:iam::111122223333:root\"}, \"Action\": \"sts:AssumeRole\"}]}"
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "bb4d25a6-29ab-562d-b506-553ca3ec45d1",
+      "timestamp": "2026-09-14T10:16:00Z",
+      "event_source": "iam.amazonaws.com",
+      "event_name": "AttachRolePolicy",
+      "actor": "user:alice.meyer",
+      "access_key_id": "AKIA5ALICEMEYER0001",
+      "source_ip": "10.20.1.15",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": null,
+      "request_parameters": {
+        "roleName": "ops-automation-admin",
+        "policyArn": "arn:aws:iam::aws:policy/AdministratorAccess"
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "data_quality": {
+    "total_records": 452,
+    "unusable_events": 4,
+    "issue_counts": {
+      "missing_user_identity": 1,
+      "missing_event_time": 1,
+      "malformed_record": 1,
+      "invalid_event_time": 1
+    },
+    "time_gaps": [
+      {
+        "start": "2026-09-14T21:49:41Z",
+        "end": "2026-09-15T04:32:42Z",
+        "duration_minutes": 403.0,
+        "reason": "no_events"
+      }
+    ],
+    "instruction_like_event_ids": [
+      "02e31dee-4ec7-5442-88f1-b18aa0b7be83",
+      "d5a92d20-7e9f-505a-868c-85cc373039ee"
+    ],
+    "has_data_events": true
+  },
+  "recommendations": [
+    {
+      "rec_id": "revert-permissions:role:ops-automation-admin",
+      "title": "Berechtigungen von role:ops-automation-admin prüfen und ggf. zurücksetzen",
+      "rationale": "IT-001: AttachRolePolicy mit policyArn arn:aws:iam::aws:policy/AdministratorAccess, die in der Liste privilegierter Policies steht.",
+      "verify_steps": [
+        "aws iam list-attached-role-policies --role-name ops-automation-admin",
+        "aws iam list-role-policies --role-name ops-automation-admin",
+        "Change-Ticket bzw. Freigabe für die Änderung suchen"
+      ],
+      "change_steps": [
+        "aws iam detach-role-policy --role-name ops-automation-admin --policy-arn arn:aws:iam::aws:policy/AdministratorAccess"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [
+        "F-IT-001-ad6072c19933"
+      ],
+      "approval": null
+    },
+    {
+      "rec_id": "contain-actor:user:alice.meyer",
+      "title": "Zugangsdaten von user:alice.meyer prüfen",
+      "rationale": "Der Akteur hat auslösende Ereignisse verursacht. Ob die Zugangsdaten kompromittiert sind, ist offen.",
+      "verify_steps": [
+        "aws iam list-access-keys --user-name alice.meyer",
+        "aws iam list-mfa-devices --user-name alice.meyer",
+        "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+      ],
+      "change_steps": [
+        "Aktive Schlüssel von alice.meyer deaktivieren (update-access-key --status Inactive)",
+        "Konsolen-Passwort zurücksetzen und MFA neu registrieren"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [],
+      "approval": null
+    }
+  ],
+  "investigation_log": [
+    {
+      "timestamp": "2026-10-20T07:03:25.513160Z",
+      "analyst": "demo",
+      "action": "report_exported",
+      "note": "Bericht per CLI erzeugt",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-20T07:03:25.513160Z",
+      "analyst": "demo",
+      "action": "ai_analysis",
+      "note": "KI-Analyse (offline-template)",
+      "details": {}
+    }
+  ],
+  "remediation": null,
+  "ai_analysis": {
+    "provider": "offline-template",
+    "summary": "1 Finding(s) aus den Regeln IT-001 betreffen user:alice.meyer. Die Zeitleiste umfasst 5 Ereignisse, davon 2 auslösend. Schweregrad laut Regeln: high.",
+    "facts": [
+      {
+        "text": "2026-09-14 10:15:00 UTC: user:alice.meyer rief iam.amazonaws.com CreateRole auf role:ops-automation-admin auf mit Schlüssel AKIA5ALICEMEYER0001, Quell-IP 10.20.1.15, erfolgreich.",
+        "event_ids": [
+          "ed7c6d01-d54d-5575-b743-c25117b957a9"
+        ]
+      },
+      {
+        "text": "2026-09-14 10:16:00 UTC: user:alice.meyer rief iam.amazonaws.com AttachRolePolicy auf role:ops-automation-admin, policyArn=arn:aws:iam::aws:policy/AdministratorAccess auf mit Schlüssel AKIA5ALICEMEYER0001, Quell-IP 10.20.1.15, erfolgreich.",
+        "event_ids": [
+          "bb4d25a6-29ab-562d-b506-553ca3ec45d1"
+        ]
+      }
+    ],
+    "hypotheses": [],
+    "uncertainties": [
+      "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "Wie user:alice.meyer an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen)."
+    ],
+    "investigation_steps": [
+      "aws iam list-attached-role-policies --role-name ops-automation-admin",
+      "aws iam list-role-policies --role-name ops-automation-admin",
+      "Change-Ticket bzw. Freigabe für die Änderung suchen",
+      "aws iam list-access-keys --user-name alice.meyer",
+      "aws iam list-mfa-devices --user-name alice.meyer",
+      "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+    ],
+    "remediation_suggestions": [
+      {
+        "text": "Berechtigungen von role:ops-automation-admin prüfen und ggf. zurücksetzen",
+        "requires_approval": true
+      },
+      {
+        "text": "Zugangsdaten von user:alice.meyer prüfen",
+        "requires_approval": true
+      }
+    ],
+    "manipulation_indicators": [],
+    "validation_warnings": [],
+    "advisory_only": true
+  },
+  "disclaimer": "IdentityTrace hat keine Änderungen an Cloud-Ressourcen vorgenommen. Empfehlungen mit Freigabevermerk wurden von Menschen außerhalb des Tools umgesetzt und hier dokumentiert."
+}

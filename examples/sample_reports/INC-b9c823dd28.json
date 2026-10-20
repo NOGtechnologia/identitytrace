@@ -1,0 +1,1209 @@
+{
+  "report_type": "identitytrace.incident",
+  "tool_version": "0.1.0",
+  "generated_at": "2026-10-20T07:03:25.504385Z",
+  "dataset": "synthetic_cloudtrail.json",
+  "incident": {
+    "id": "INC-b9c823dd28",
+    "title": "Rechteausweitung → neuer Zugang → Zugriff auf sensible Daten (user:backup-operator, user:ci-deployer)",
+    "severity": "critical",
+    "status": "open",
+    "first_seen": "2026-09-15T11:28:11Z",
+    "last_seen": "2026-09-15T18:16:57Z",
+    "actors": [
+      "user:backup-operator",
+      "user:ci-deployer"
+    ],
+    "entities": [
+      "key:AKIA5BACKUPOP000011",
+      "key:AKIA5BACKUPOPNEW077",
+      "key:AKIA5CIDEPLOYER0006",
+      "user:backup-operator",
+      "user:ci-deployer"
+    ],
+    "patterns": [
+      "Rechteausweitung → neuer Zugang → Zugriff auf sensible Daten",
+      "Spurenverwischung nach Änderung"
+    ],
+    "rule_ids": [
+      "IT-001",
+      "IT-002",
+      "IT-003",
+      "IT-004",
+      "IT-006"
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "F-IT-001-e52dc14cd3aa",
+      "rule_id": "IT-001",
+      "rule_name": "Privilegierte Rolle angelegt oder verändert",
+      "severity": "high",
+      "title": "Privilegierte Policy an user:backup-operator angehängt",
+      "description": "Eine Identität erhielt eine verwaltete Policy mit administrativen Rechten.",
+      "rationale": "AttachUserPolicy mit policyArn arn:aws:iam::aws:policy/IAMFullAccess, die in der Liste privilegierter Policies steht.",
+      "event_ids": [
+        "b818131a-a777-5ad9-a5d9-283fbf0f52db"
+      ],
+      "actor": "user:ci-deployer",
+      "targets": [
+        "user:backup-operator"
+      ],
+      "first_seen": "2026-09-15T13:03:00Z",
+      "last_seen": "2026-09-15T13:03:00Z",
+      "evidence": [
+        {
+          "event_id": "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+          "field": "requestParameters.policyArn",
+          "value": "arn:aws:iam::aws:policy/IAMFullAccess"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1098",
+        "T1098.003"
+      ]
+    },
+    {
+      "finding_id": "F-IT-006-01f7d96601c6",
+      "rule_id": "IT-006",
+      "rule_name": "Häufung auffälliger Ereignisse",
+      "severity": "critical",
+      "title": "3 auffällige Ereignisse von user:ci-deployer in 3.0 Minuten",
+      "description": "Mehrere unabhängige Regeln schlugen für dieselbe Identität in kurzer Zeit an.",
+      "rationale": "3 Ereignisse aus den Regeln IT-001, IT-002, IT-003 innerhalb von 30 Minuten (Schwelle: 3 Ereignisse, 2 Regeln).",
+      "event_ids": [
+        "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+        "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+        "accc24aa-1fc4-5749-bdb4-043ce2770d73"
+      ],
+      "actor": "user:ci-deployer",
+      "targets": [],
+      "first_seen": "2026-09-15T13:03:00Z",
+      "last_seen": "2026-09-15T13:06:00Z",
+      "evidence": [
+        {
+          "event_id": "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+          "field": "eventName",
+          "value": "AttachUserPolicy"
+        },
+        {
+          "event_id": "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+          "field": "eventName",
+          "value": "PutUserPolicy"
+        },
+        {
+          "event_id": "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+          "field": "eventName",
+          "value": "CreateAccessKey"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": []
+    },
+    {
+      "finding_id": "F-IT-002-447f2dad846d",
+      "rule_id": "IT-002",
+      "rule_name": "Ungewöhnlich weitreichende Berechtigungen",
+      "severity": "critical",
+      "title": "Ungewöhnlich weitreichende Berechtigungen für user:backup-operator",
+      "description": "Eine Policy gewährt Wildcard-Rechte auf alle Aktionen oder auf sicherheitskritische Dienste.",
+      "rationale": "PutUserPolicy enthält: Action \"*\" (alle Aktionen aller Dienste).",
+      "event_ids": [
+        "75ef3ad6-0806-55b1-956c-9cdeb79a60b4"
+      ],
+      "actor": "user:ci-deployer",
+      "targets": [
+        "user:backup-operator"
+      ],
+      "first_seen": "2026-09-15T13:04:00Z",
+      "last_seen": "2026-09-15T13:04:00Z",
+      "evidence": [
+        {
+          "event_id": "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+          "field": "requestParameters.policyDocument",
+          "value": [
+            "Action \"*\" (alle Aktionen aller Dienste)"
+          ]
+        },
+        {
+          "event_id": "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+          "field": "requestParameters.policyName",
+          "value": "maintenance"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1098"
+      ]
+    },
+    {
+      "finding_id": "F-IT-003-5cccab94efc2",
+      "rule_id": "IT-003",
+      "rule_name": "API-Schlüssel für sensibles Konto",
+      "severity": "high",
+      "title": "Neuer API-Schlüssel für sensibles Konto user:backup-operator",
+      "description": "Für ein privilegiertes oder besonders schützenswertes Konto wurde ein langlebiger Zugangsschlüssel erzeugt.",
+      "rationale": "CreateAccessKey für user:backup-operator; das Konto gilt als sensibel (hat seit 2026-09-15T13:03:00+00:00 privilegierte Berechtigungen (laut Log)). Der Schlüssel wurde von einer anderen Identität (user:ci-deployer) erzeugt.",
+      "event_ids": [
+        "accc24aa-1fc4-5749-bdb4-043ce2770d73"
+      ],
+      "actor": "user:ci-deployer",
+      "targets": [
+        "user:backup-operator"
+      ],
+      "first_seen": "2026-09-15T13:06:00Z",
+      "last_seen": "2026-09-15T13:06:00Z",
+      "evidence": [
+        {
+          "event_id": "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+          "field": "requestParameters.userName",
+          "value": "backup-operator"
+        },
+        {
+          "event_id": "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+          "field": "responseElements.accessKey.accessKeyId",
+          "value": "AKIA5BACKUPOPNEW077"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1098.001"
+      ]
+    },
+    {
+      "finding_id": "F-IT-004-5544e63a8ffd",
+      "rule_id": "IT-004",
+      "rule_name": "Audit-Protokollierung deaktiviert oder verändert",
+      "severity": "high",
+      "title": "CloudTrail-Event-Selektoren geändert: org-trail",
+      "description": "Eine Änderung an der Sicherheitsprotokollierung kann Spuren verwischen und schafft blinde Flecken.",
+      "rationale": "cloudtrail.amazonaws.com PutEventSelectors am 2026-09-15T13:20:00+00:00 durch user:backup-operator.",
+      "event_ids": [
+        "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+      ],
+      "actor": "user:backup-operator",
+      "targets": [
+        "logging:org-trail"
+      ],
+      "first_seen": "2026-09-15T13:20:00Z",
+      "last_seen": "2026-09-15T13:20:00Z",
+      "evidence": [
+        {
+          "event_id": "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed",
+          "field": "eventName",
+          "value": "PutEventSelectors"
+        },
+        {
+          "event_id": "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed",
+          "field": "eventTime",
+          "value": "2026-09-15T13:20:00+00:00"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1562.008"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "3d6cbcb5-980b-56ab-a677-60811412915c",
+      "timestamp": "2026-09-15T11:28:11Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "7e4e3f5c-5f00-5e68-b9f4-b9e89090b35d",
+      "timestamp": "2026-09-15T11:42:12Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "982ad1ec-a9da-5204-bd84-7a7e1f4d59fe",
+      "timestamp": "2026-09-15T12:03:05Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "c72fcbdc-da0c-535c-98d0-3cba8c56148f",
+      "timestamp": "2026-09-15T12:20:22Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "5780d2f0-c406-5ba0-a61e-919574c2f24e",
+      "timestamp": "2026-09-15T12:20:46Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "1bf2546a-231e-571d-a9e0-27a46384c5d2",
+      "timestamp": "2026-09-15T12:38:10Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "bcb3d863-879c-5bff-975e-ada7296e4f55",
+      "timestamp": "2026-09-15T12:46:16Z",
+      "event_name": "UpdateFunctionCode20150331v2",
+      "event_source": "lambda.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "7213a809-5f03-5200-8692-daf4b9ff238b",
+      "timestamp": "2026-09-15T12:56:13Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "49200d3c-9dc0-516e-b66f-52428de0c045",
+      "timestamp": "2026-09-15T13:01:00Z",
+      "event_name": "GetCallerIdentity",
+      "event_source": "sts.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "203.0.113.77",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "reconnaissance",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "8d2add22-64bc-577a-b073-b4b1e9f4ac64",
+      "timestamp": "2026-09-15T13:02:00Z",
+      "event_name": "ListUsers",
+      "event_source": "iam.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "203.0.113.77",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "reconnaissance",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+      "timestamp": "2026-09-15T13:03:00Z",
+      "event_name": "AttachUserPolicy",
+      "event_source": "iam.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "203.0.113.77",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-001-e52dc14cd3aa",
+        "F-IT-006-01f7d96601c6"
+      ],
+      "rule_ids": [
+        "IT-001",
+        "IT-006"
+      ],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+      "timestamp": "2026-09-15T13:04:00Z",
+      "event_name": "PutUserPolicy",
+      "event_source": "iam.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "203.0.113.77",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-006-01f7d96601c6",
+        "F-IT-002-447f2dad846d"
+      ],
+      "rule_ids": [
+        "IT-002",
+        "IT-006"
+      ],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+      "timestamp": "2026-09-15T13:06:00Z",
+      "event_name": "CreateAccessKey",
+      "event_source": "iam.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "203.0.113.77",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-006-01f7d96601c6",
+        "F-IT-003-5cccab94efc2"
+      ],
+      "rule_ids": [
+        "IT-003",
+        "IT-006"
+      ],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "1f4eed89-f30b-5aeb-a30d-43a59a650f8a",
+      "timestamp": "2026-09-15T13:10:00Z",
+      "event_name": "GetCallerIdentity",
+      "event_source": "sts.amazonaws.com",
+      "actor": "user:backup-operator",
+      "source_ip": "203.0.113.77",
+      "access_key_id": "AKIA5BACKUPOPNEW077",
+      "outcome": "success",
+      "kind": "reconnaissance",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "0392b9a4-5fc7-57db-bd16-ba5510625925",
+      "timestamp": "2026-09-15T13:12:00Z",
+      "event_name": "ListSecrets",
+      "event_source": "secretsmanager.amazonaws.com",
+      "actor": "user:backup-operator",
+      "source_ip": "203.0.113.77",
+      "access_key_id": "AKIA5BACKUPOPNEW077",
+      "outcome": "success",
+      "kind": "sensitive_access",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "d17d1c33-f4ae-56c0-8569-3ff33cfd0ce9",
+      "timestamp": "2026-09-15T13:13:00Z",
+      "event_name": "GetSecretValue",
+      "event_source": "secretsmanager.amazonaws.com",
+      "actor": "user:backup-operator",
+      "source_ip": "203.0.113.77",
+      "access_key_id": "AKIA5BACKUPOPNEW077",
+      "outcome": "success",
+      "kind": "sensitive_access",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "176dee51-3d52-5fe5-a105-c51e739fabb4",
+      "timestamp": "2026-09-15T13:15:00Z",
+      "event_name": "GetObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:backup-operator",
+      "source_ip": "203.0.113.77",
+      "access_key_id": "AKIA5BACKUPOPNEW077",
+      "outcome": "success",
+      "kind": "sensitive_access",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed",
+      "timestamp": "2026-09-15T13:20:00Z",
+      "event_name": "PutEventSelectors",
+      "event_source": "cloudtrail.amazonaws.com",
+      "actor": "user:backup-operator",
+      "source_ip": "203.0.113.77",
+      "access_key_id": "AKIA5BACKUPOPNEW077",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-004-5544e63a8ffd"
+      ],
+      "rule_ids": [
+        "IT-004"
+      ],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "f8da065b-834e-557f-a085-5a0201a14e6c",
+      "timestamp": "2026-09-15T15:32:29Z",
+      "event_name": "CreateSnapshot",
+      "event_source": "ec2.amazonaws.com",
+      "actor": "user:backup-operator",
+      "source_ip": "10.30.0.20",
+      "access_key_id": "AKIA5BACKUPOP000011",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "56f11d9f-2fe2-587c-b2c4-57604d40be9a",
+      "timestamp": "2026-09-15T15:33:56Z",
+      "event_name": "UpdateFunctionCode20150331v2",
+      "event_source": "lambda.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "d9fe2ad1-abec-5f9a-a4d8-417155645118",
+      "timestamp": "2026-09-15T15:50:37Z",
+      "event_name": "UpdateFunctionCode20150331v2",
+      "event_source": "lambda.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "b5f47a50-df14-5acb-a026-0398fd73664b",
+      "timestamp": "2026-09-15T15:57:38Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "0784c61c-65ba-5842-85d3-42e0d2e42216",
+      "timestamp": "2026-09-15T17:02:31Z",
+      "event_name": "UpdateFunctionCode20150331v2",
+      "event_source": "lambda.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "6a48f913-0af7-5f48-8e8b-8398bd297adb",
+      "timestamp": "2026-09-15T18:03:22Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "fb402229-a7a3-56dd-aac2-d73fb7a8d71a",
+      "timestamp": "2026-09-15T18:16:57Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:ci-deployer",
+      "source_ip": "52.29.10.10",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "facts": [
+    {
+      "text": "2026-09-15 11:28:11 UTC: user:ci-deployer rief s3.amazonaws.com PutObject, bucket=acme-build-artifacts/builds/8822.zip auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "3d6cbcb5-980b-56ab-a677-60811412915c"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 11:42:12 UTC: user:ci-deployer rief s3.amazonaws.com PutObject, bucket=acme-build-artifacts/builds/5706.zip auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "7e4e3f5c-5f00-5e68-b9f4-b9e89090b35d"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 12:03:05 UTC: user:ci-deployer rief s3.amazonaws.com PutObject, bucket=acme-build-artifacts/builds/7025.zip auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "982ad1ec-a9da-5204-bd84-7a7e1f4d59fe"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 12:20:22 UTC: user:ci-deployer rief s3.amazonaws.com PutObject, bucket=acme-build-artifacts/builds/5939.zip auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "c72fcbdc-da0c-535c-98d0-3cba8c56148f"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 12:20:46 UTC: user:ci-deployer rief s3.amazonaws.com PutObject, bucket=acme-build-artifacts/builds/3320.zip auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "5780d2f0-c406-5ba0-a61e-919574c2f24e"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 12:38:10 UTC: user:ci-deployer rief s3.amazonaws.com PutObject, bucket=acme-build-artifacts/builds/7838.zip auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "1bf2546a-231e-571d-a9e0-27a46384c5d2"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 12:46:16 UTC: user:ci-deployer rief lambda.amazonaws.com UpdateFunctionCode20150331v2 auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "bcb3d863-879c-5bff-975e-ada7296e4f55"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 12:56:13 UTC: user:ci-deployer rief s3.amazonaws.com PutObject, bucket=acme-build-artifacts/builds/9098.zip auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "7213a809-5f03-5200-8692-daf4b9ff238b"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 13:01:00 UTC: user:ci-deployer rief sts.amazonaws.com GetCallerIdentity auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 203.0.113.77, erfolgreich.",
+      "event_ids": [
+        "49200d3c-9dc0-516e-b66f-52428de0c045"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 13:02:00 UTC: user:ci-deployer rief iam.amazonaws.com ListUsers auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 203.0.113.77, erfolgreich.",
+      "event_ids": [
+        "8d2add22-64bc-577a-b073-b4b1e9f4ac64"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 13:03:00 UTC: user:ci-deployer rief iam.amazonaws.com AttachUserPolicy auf user:backup-operator, policyArn=arn:aws:iam::aws:policy/IAMFullAccess auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 203.0.113.77, erfolgreich.",
+      "event_ids": [
+        "b818131a-a777-5ad9-a5d9-283fbf0f52db"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 13:04:00 UTC: user:ci-deployer rief iam.amazonaws.com PutUserPolicy auf user:backup-operator auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 203.0.113.77, erfolgreich.",
+      "event_ids": [
+        "75ef3ad6-0806-55b1-956c-9cdeb79a60b4"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 13:06:00 UTC: user:ci-deployer rief iam.amazonaws.com CreateAccessKey auf user:backup-operator, neuer Schlüssel=AKIA5BACKUPOPNEW077 auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 203.0.113.77, erfolgreich.",
+      "event_ids": [
+        "accc24aa-1fc4-5749-bdb4-043ce2770d73"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 13:10:00 UTC: user:backup-operator rief sts.amazonaws.com GetCallerIdentity auf mit Schlüssel AKIA5BACKUPOPNEW077, Quell-IP 203.0.113.77, erfolgreich.",
+      "event_ids": [
+        "1f4eed89-f30b-5aeb-a30d-43a59a650f8a"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 13:12:00 UTC: user:backup-operator rief secretsmanager.amazonaws.com ListSecrets auf mit Schlüssel AKIA5BACKUPOPNEW077, Quell-IP 203.0.113.77, erfolgreich.",
+      "event_ids": [
+        "0392b9a4-5fc7-57db-bd16-ba5510625925"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 13:13:00 UTC: user:backup-operator rief secretsmanager.amazonaws.com GetSecretValue, secretId=prod/db/credentials auf mit Schlüssel AKIA5BACKUPOPNEW077, Quell-IP 203.0.113.77, erfolgreich.",
+      "event_ids": [
+        "d17d1c33-f4ae-56c0-8569-3ff33cfd0ce9"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 13:15:00 UTC: user:backup-operator rief s3.amazonaws.com GetObject, bucket=prod-customer-exports/export-2026-09.csv auf mit Schlüssel AKIA5BACKUPOPNEW077, Quell-IP 203.0.113.77, erfolgreich.",
+      "event_ids": [
+        "176dee51-3d52-5fe5-a105-c51e739fabb4"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 13:20:00 UTC: user:backup-operator rief cloudtrail.amazonaws.com PutEventSelectors auf mit Schlüssel AKIA5BACKUPOPNEW077, Quell-IP 203.0.113.77, erfolgreich.",
+      "event_ids": [
+        "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 15:32:29 UTC: user:backup-operator rief ec2.amazonaws.com CreateSnapshot auf mit Schlüssel AKIA5BACKUPOP000011, Quell-IP 10.30.0.20, erfolgreich.",
+      "event_ids": [
+        "f8da065b-834e-557f-a085-5a0201a14e6c"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 15:33:56 UTC: user:ci-deployer rief lambda.amazonaws.com UpdateFunctionCode20150331v2 auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "56f11d9f-2fe2-587c-b2c4-57604d40be9a"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 15:50:37 UTC: user:ci-deployer rief lambda.amazonaws.com UpdateFunctionCode20150331v2 auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "d9fe2ad1-abec-5f9a-a4d8-417155645118"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 15:57:38 UTC: user:ci-deployer rief s3.amazonaws.com PutObject, bucket=acme-build-artifacts/builds/9223.zip auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "b5f47a50-df14-5acb-a026-0398fd73664b"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 17:02:31 UTC: user:ci-deployer rief lambda.amazonaws.com UpdateFunctionCode20150331v2 auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "0784c61c-65ba-5842-85d3-42e0d2e42216"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 18:03:22 UTC: user:ci-deployer rief s3.amazonaws.com PutObject, bucket=acme-build-artifacts/builds/3020.zip auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "6a48f913-0af7-5f48-8e8b-8398bd297adb"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-15 18:16:57 UTC: user:ci-deployer rief s3.amazonaws.com PutObject, bucket=acme-build-artifacts/builds/7381.zip auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 52.29.10.10, erfolgreich.",
+      "event_ids": [
+        "fb402229-a7a3-56dd-aac2-d73fb7a8d71a"
+      ],
+      "confidence": null
+    }
+  ],
+  "inferences": [
+    {
+      "text": "Der am 2026-09-15 13:06:00 UTC erzeugte Schlüssel AKIA5BACKUPOPNEW077 wurde 5-mal verwendet (erstmals 2026-09-15 13:10:00 UTC, IPs: 203.0.113.77). Darunter 3 Zugriffe auf sensible Ressourcen (GetObject, GetSecretValue, ListSecrets).",
+      "event_ids": [
+        "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+        "1f4eed89-f30b-5aeb-a30d-43a59a650f8a",
+        "0392b9a4-5fc7-57db-bd16-ba5510625925",
+        "d17d1c33-f4ae-56c0-8569-3ff33cfd0ce9",
+        "176dee51-3d52-5fe5-a105-c51e739fabb4",
+        "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+      ],
+      "confidence": "hoch"
+    },
+    {
+      "text": "user:backup-operator handelte im Vorfall von 203.0.113.77; diese IP(s) kommen für user:backup-operator sonst im importierten Zeitraum nicht vor (sonst: 10.30.0.20). Möglicher Zugriff durch Dritte; die Basislinie umfasst nur den importierten Zeitraum.",
+      "event_ids": [
+        "1f4eed89-f30b-5aeb-a30d-43a59a650f8a",
+        "0392b9a4-5fc7-57db-bd16-ba5510625925",
+        "d17d1c33-f4ae-56c0-8569-3ff33cfd0ce9",
+        "176dee51-3d52-5fe5-a105-c51e739fabb4",
+        "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+      ],
+      "confidence": "mittel"
+    },
+    {
+      "text": "user:ci-deployer handelte im Vorfall von 203.0.113.77; diese IP(s) kommen für user:ci-deployer sonst im importierten Zeitraum nicht vor (sonst: 52.29.10.10). Möglicher Zugriff durch Dritte; die Basislinie umfasst nur den importierten Zeitraum.",
+      "event_ids": [
+        "49200d3c-9dc0-516e-b66f-52428de0c045",
+        "8d2add22-64bc-577a-b073-b4b1e9f4ac64",
+        "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+        "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+        "accc24aa-1fc4-5749-bdb4-043ce2770d73"
+      ],
+      "confidence": "mittel"
+    },
+    {
+      "text": "Die Abfolge aus Rechteausweitung, neuem Zugangsschlüssel und anschließendem Zugriff auf sensible Ressourcen ist typisch für eine Kontoübernahme mit Persistenz. Ob ein autorisierter Change vorlag, lässt sich aus den Logs nicht entscheiden.",
+      "event_ids": [
+        "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+        "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+        "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+        "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+        "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+        "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+        "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+      ],
+      "confidence": "mittel"
+    },
+    {
+      "text": "Die Protokollierung wurde nach anderen auffälligen Änderungen manipuliert. Das spricht für den Versuch, weitere Aktivität zu verbergen.",
+      "event_ids": [
+        "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+      ],
+      "confidence": "mittel"
+    }
+  ],
+  "gaps": [
+    {
+      "text": "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "event_ids": [],
+      "confidence": null
+    },
+    {
+      "text": "Ab 2026-09-15 13:20:00 UTC ist die Protokollierung möglicherweise eingeschränkt (PutEventSelectors). Fehlende Ereignisse danach beweisen keine Inaktivität.",
+      "event_ids": [
+        "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "Wie user:backup-operator an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen).",
+      "event_ids": [],
+      "confidence": null
+    },
+    {
+      "text": "Wie user:ci-deployer an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen).",
+      "event_ids": [],
+      "confidence": null
+    }
+  ],
+  "evidence_events": [
+    {
+      "event_id": "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+      "timestamp": "2026-09-15T13:03:00Z",
+      "event_source": "iam.amazonaws.com",
+      "event_name": "AttachUserPolicy",
+      "actor": "user:ci-deployer",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "source_ip": "203.0.113.77",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": null,
+      "request_parameters": {
+        "userName": "backup-operator",
+        "policyArn": "arn:aws:iam::aws:policy/IAMFullAccess"
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+      "timestamp": "2026-09-15T13:04:00Z",
+      "event_source": "iam.amazonaws.com",
+      "event_name": "PutUserPolicy",
+      "actor": "user:ci-deployer",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "source_ip": "203.0.113.77",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": null,
+      "request_parameters": {
+        "userName": "backup-operator",
+        "policyName": "maintenance",
+        "policyDocument": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": \"*\", \"Resource\": \"*\"}]}"
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+      "timestamp": "2026-09-15T13:06:00Z",
+      "event_source": "iam.amazonaws.com",
+      "event_name": "CreateAccessKey",
+      "actor": "user:ci-deployer",
+      "access_key_id": "AKIA5CIDEPLOYER0006",
+      "source_ip": "203.0.113.77",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": null,
+      "request_parameters": {
+        "userName": "backup-operator"
+      },
+      "response_elements": {
+        "accessKey": {
+          "userName": "backup-operator",
+          "accessKeyId": "AKIA5BACKUPOPNEW077",
+          "status": "Active",
+          "createDate": "Sep 15, 2026 1:06:00 PM"
+        }
+      },
+      "quality_issues": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed",
+      "timestamp": "2026-09-15T13:20:00Z",
+      "event_source": "cloudtrail.amazonaws.com",
+      "event_name": "PutEventSelectors",
+      "actor": "user:backup-operator",
+      "access_key_id": "AKIA5BACKUPOPNEW077",
+      "source_ip": "203.0.113.77",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": null,
+      "request_parameters": {
+        "trailName": "arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+        "eventSelectors": [
+          {
+            "readWriteType": "WriteOnly",
+            "includeManagementEvents": false
+          }
+        ]
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "data_quality": {
+    "total_records": 452,
+    "unusable_events": 4,
+    "issue_counts": {
+      "missing_user_identity": 1,
+      "missing_event_time": 1,
+      "malformed_record": 1,
+      "invalid_event_time": 1
+    },
+    "time_gaps": [
+      {
+        "start": "2026-09-14T21:49:41Z",
+        "end": "2026-09-15T04:32:42Z",
+        "duration_minutes": 403.0,
+        "reason": "no_events"
+      }
+    ],
+    "instruction_like_event_ids": [
+      "02e31dee-4ec7-5442-88f1-b18aa0b7be83",
+      "d5a92d20-7e9f-505a-868c-85cc373039ee"
+    ],
+    "has_data_events": true
+  },
+  "recommendations": [
+    {
+      "rec_id": "revert-permissions:user:backup-operator",
+      "title": "Berechtigungen von user:backup-operator prüfen und ggf. zurücksetzen",
+      "rationale": "IT-001: AttachUserPolicy mit policyArn arn:aws:iam::aws:policy/IAMFullAccess, die in der Liste privilegierter Policies steht.",
+      "verify_steps": [
+        "aws iam list-attached-user-policies --user-name backup-operator",
+        "aws iam list-user-policies --user-name backup-operator",
+        "Change-Ticket bzw. Freigabe für die Änderung suchen"
+      ],
+      "change_steps": [
+        "aws iam detach-user-policy --user-name backup-operator --policy-arn arn:aws:iam::aws:policy/IAMFullAccess"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [
+        "F-IT-001-e52dc14cd3aa"
+      ],
+      "approval": null
+    },
+    {
+      "rec_id": "review-key:AKIA5BACKUPOPNEW077",
+      "title": "Neuen Schlüssel AKIA5BACKUPOPNEW077 für backup-operator überprüfen",
+      "rationale": "CreateAccessKey für user:backup-operator; das Konto gilt als sensibel (hat seit 2026-09-15T13:03:00+00:00 privilegierte Berechtigungen (laut Log)). Der Schlüssel wurde von einer anderen Identität (user:ci-deployer) erzeugt.",
+      "verify_steps": [
+        "aws iam get-access-key-last-used --access-key-id AKIA5BACKUPOPNEW077",
+        "Mit dem Kontoinhaber von backup-operator klären, ob der Schlüssel beauftragt war"
+      ],
+      "change_steps": [
+        "aws iam update-access-key --user-name backup-operator --access-key-id AKIA5BACKUPOPNEW077 --status Inactive",
+        "Nach Bestätigung: Schlüssel löschen und betroffene Secrets rotieren"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [
+        "F-IT-003-5cccab94efc2"
+      ],
+      "approval": null
+    },
+    {
+      "rec_id": "restore-logging:arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+      "title": "Protokollierung wiederherstellen und Lücke bewerten",
+      "rationale": "cloudtrail.amazonaws.com PutEventSelectors am 2026-09-15T13:20:00+00:00 durch user:backup-operator.",
+      "verify_steps": [
+        "aws cloudtrail get-trail-status --name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+        "aws cloudtrail get-event-selectors --trail-name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+        "Für die Zeit ohne Protokollierung andere Quellen prüfen (Config, VPC Flow Logs, Anwendungslogs)"
+      ],
+      "change_steps": [
+        "aws cloudtrail start-logging --name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+        "Event-Selektoren und Multi-Region-Einstellung aus dem Soll-Zustand wiederherstellen"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [
+        "F-IT-004-5544e63a8ffd"
+      ],
+      "approval": null
+    },
+    {
+      "rec_id": "contain-actor:user:backup-operator",
+      "title": "Zugangsdaten von user:backup-operator prüfen",
+      "rationale": "Der Akteur hat auslösende Ereignisse verursacht. Ob die Zugangsdaten kompromittiert sind, ist offen.",
+      "verify_steps": [
+        "aws iam list-access-keys --user-name backup-operator",
+        "aws iam list-mfa-devices --user-name backup-operator",
+        "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+      ],
+      "change_steps": [
+        "Aktive Schlüssel von backup-operator deaktivieren (update-access-key --status Inactive)",
+        "Konsolen-Passwort zurücksetzen und MFA neu registrieren"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [],
+      "approval": null
+    },
+    {
+      "rec_id": "contain-actor:user:ci-deployer",
+      "title": "Zugangsdaten von user:ci-deployer prüfen",
+      "rationale": "Der Akteur hat auslösende Ereignisse verursacht. Ob die Zugangsdaten kompromittiert sind, ist offen.",
+      "verify_steps": [
+        "aws iam list-access-keys --user-name ci-deployer",
+        "aws iam list-mfa-devices --user-name ci-deployer",
+        "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+      ],
+      "change_steps": [
+        "Aktive Schlüssel von ci-deployer deaktivieren (update-access-key --status Inactive)",
+        "Konsolen-Passwort zurücksetzen und MFA neu registrieren"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [],
+      "approval": null
+    },
+    {
+      "rec_id": "scope-data-access",
+      "title": "Umfang des Datenzugriffs bestimmen",
+      "rationale": "Das erkannte Muster umfasst Zugriffe auf sensible Ressourcen.",
+      "verify_steps": [
+        "Betroffene Secrets und Objekte aus der Zeitleiste auflisten",
+        "S3-Server-Access-Logs bzw. Data-Events für die betroffenen Buckets prüfen"
+      ],
+      "change_steps": [
+        "Gelesene Secrets rotieren",
+        "Datenschutz-/Meldepflichten prüfen lassen"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [],
+      "approval": null
+    }
+  ],
+  "investigation_log": [
+    {
+      "timestamp": "2026-10-20T07:03:25.504385Z",
+      "analyst": "demo",
+      "action": "report_exported",
+      "note": "Bericht per CLI erzeugt",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-20T07:03:25.504385Z",
+      "analyst": "demo",
+      "action": "ai_analysis",
+      "note": "KI-Analyse (offline-template)",
+      "details": {}
+    }
+  ],
+  "remediation": null,
+  "ai_analysis": {
+    "provider": "offline-template",
+    "summary": "5 Finding(s) aus den Regeln IT-001, IT-002, IT-003, IT-004, IT-006 betreffen user:backup-operator, user:ci-deployer. Die Zeitleiste umfasst 25 Ereignisse, davon 4 auslösend. Schweregrad laut Regeln: critical.",
+    "facts": [
+      {
+        "text": "2026-09-15 13:03:00 UTC: user:ci-deployer rief iam.amazonaws.com AttachUserPolicy auf user:backup-operator, policyArn=arn:aws:iam::aws:policy/IAMFullAccess auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 203.0.113.77, erfolgreich.",
+        "event_ids": [
+          "b818131a-a777-5ad9-a5d9-283fbf0f52db"
+        ]
+      },
+      {
+        "text": "2026-09-15 13:04:00 UTC: user:ci-deployer rief iam.amazonaws.com PutUserPolicy auf user:backup-operator auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 203.0.113.77, erfolgreich.",
+        "event_ids": [
+          "75ef3ad6-0806-55b1-956c-9cdeb79a60b4"
+        ]
+      },
+      {
+        "text": "2026-09-15 13:06:00 UTC: user:ci-deployer rief iam.amazonaws.com CreateAccessKey auf user:backup-operator, neuer Schlüssel=AKIA5BACKUPOPNEW077 auf mit Schlüssel AKIA5CIDEPLOYER0006, Quell-IP 203.0.113.77, erfolgreich.",
+        "event_ids": [
+          "accc24aa-1fc4-5749-bdb4-043ce2770d73"
+        ]
+      },
+      {
+        "text": "2026-09-15 13:20:00 UTC: user:backup-operator rief cloudtrail.amazonaws.com PutEventSelectors auf mit Schlüssel AKIA5BACKUPOPNEW077, Quell-IP 203.0.113.77, erfolgreich.",
+        "event_ids": [
+          "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "text": "Der am 2026-09-15 13:06:00 UTC erzeugte Schlüssel AKIA5BACKUPOPNEW077 wurde 5-mal verwendet (erstmals 2026-09-15 13:10:00 UTC, IPs: 203.0.113.77). Darunter 3 Zugriffe auf sensible Ressourcen (GetObject, GetSecretValue, ListSecrets).",
+        "event_ids": [
+          "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+          "1f4eed89-f30b-5aeb-a30d-43a59a650f8a",
+          "0392b9a4-5fc7-57db-bd16-ba5510625925",
+          "d17d1c33-f4ae-56c0-8569-3ff33cfd0ce9",
+          "176dee51-3d52-5fe5-a105-c51e739fabb4",
+          "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+        ],
+        "confidence": "hoch"
+      },
+      {
+        "text": "user:backup-operator handelte im Vorfall von 203.0.113.77; diese IP(s) kommen für user:backup-operator sonst im importierten Zeitraum nicht vor (sonst: 10.30.0.20). Möglicher Zugriff durch Dritte; die Basislinie umfasst nur den importierten Zeitraum.",
+        "event_ids": [
+          "1f4eed89-f30b-5aeb-a30d-43a59a650f8a",
+          "0392b9a4-5fc7-57db-bd16-ba5510625925",
+          "d17d1c33-f4ae-56c0-8569-3ff33cfd0ce9",
+          "176dee51-3d52-5fe5-a105-c51e739fabb4",
+          "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+        ],
+        "confidence": "mittel"
+      },
+      {
+        "text": "user:ci-deployer handelte im Vorfall von 203.0.113.77; diese IP(s) kommen für user:ci-deployer sonst im importierten Zeitraum nicht vor (sonst: 52.29.10.10). Möglicher Zugriff durch Dritte; die Basislinie umfasst nur den importierten Zeitraum.",
+        "event_ids": [
+          "49200d3c-9dc0-516e-b66f-52428de0c045",
+          "8d2add22-64bc-577a-b073-b4b1e9f4ac64",
+          "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+          "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+          "accc24aa-1fc4-5749-bdb4-043ce2770d73"
+        ],
+        "confidence": "mittel"
+      },
+      {
+        "text": "Die Abfolge aus Rechteausweitung, neuem Zugangsschlüssel und anschließendem Zugriff auf sensible Ressourcen ist typisch für eine Kontoübernahme mit Persistenz. Ob ein autorisierter Change vorlag, lässt sich aus den Logs nicht entscheiden.",
+        "event_ids": [
+          "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+          "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+          "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+          "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+          "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+          "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+          "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+        ],
+        "confidence": "mittel"
+      },
+      {
+        "text": "Die Protokollierung wurde nach anderen auffälligen Änderungen manipuliert. Das spricht für den Versuch, weitere Aktivität zu verbergen.",
+        "event_ids": [
+          "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed"
+        ],
+        "confidence": "mittel"
+      }
+    ],
+    "uncertainties": [
+      "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "Ab 2026-09-15 13:20:00 UTC ist die Protokollierung möglicherweise eingeschränkt (PutEventSelectors). Fehlende Ereignisse danach beweisen keine Inaktivität.",
+      "Wie user:backup-operator an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen).",
+      "Wie user:ci-deployer an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen)."
+    ],
+    "investigation_steps": [
+      "aws iam list-attached-user-policies --user-name backup-operator",
+      "aws iam list-user-policies --user-name backup-operator",
+      "Change-Ticket bzw. Freigabe für die Änderung suchen",
+      "aws iam get-access-key-last-used --access-key-id AKIA5BACKUPOPNEW077",
+      "Mit dem Kontoinhaber von backup-operator klären, ob der Schlüssel beauftragt war",
+      "aws cloudtrail get-trail-status --name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+      "aws cloudtrail get-event-selectors --trail-name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+      "Für die Zeit ohne Protokollierung andere Quellen prüfen (Config, VPC Flow Logs, Anwendungslogs)",
+      "aws iam list-access-keys --user-name backup-operator",
+      "aws iam list-mfa-devices --user-name backup-operator",
+      "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)",
+      "aws iam list-access-keys --user-name ci-deployer"
+    ],
+    "remediation_suggestions": [
+      {
+        "text": "Berechtigungen von user:backup-operator prüfen und ggf. zurücksetzen",
+        "requires_approval": true
+      },
+      {
+        "text": "Neuen Schlüssel AKIA5BACKUPOPNEW077 für backup-operator überprüfen",
+        "requires_approval": true
+      },
+      {
+        "text": "Protokollierung wiederherstellen und Lücke bewerten",
+        "requires_approval": true
+      },
+      {
+        "text": "Zugangsdaten von user:backup-operator prüfen",
+        "requires_approval": true
+      },
+      {
+        "text": "Zugangsdaten von user:ci-deployer prüfen",
+        "requires_approval": true
+      },
+      {
+        "text": "Umfang des Datenzugriffs bestimmen",
+        "requires_approval": true
+      }
+    ],
+    "manipulation_indicators": [],
+    "validation_warnings": [],
+    "advisory_only": true
+  },
+  "disclaimer": "IdentityTrace hat keine Änderungen an Cloud-Ressourcen vorgenommen. Empfehlungen mit Freigabevermerk wurden von Menschen außerhalb des Tools umgesetzt und hier dokumentiert."
+}

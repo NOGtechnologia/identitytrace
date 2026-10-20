@@ -1,0 +1,285 @@
+{
+  "report_type": "identitytrace.incident",
+  "tool_version": "0.1.0",
+  "generated_at": "2026-10-20T07:03:25.520491Z",
+  "dataset": "synthetic_cloudtrail.json",
+  "incident": {
+    "id": "INC-450a6eb94b",
+    "title": "Ungewöhnlich weitreichende Berechtigungen für role:app-reporting-role",
+    "severity": "high",
+    "status": "open",
+    "first_seen": "2026-09-14T11:40:00Z",
+    "last_seen": "2026-09-14T14:53:14Z",
+    "actors": [
+      "user:bob.schulz"
+    ],
+    "entities": [
+      "key:AKIA5BOBSCHULZ00002",
+      "role:app-reporting-role",
+      "user:bob.schulz"
+    ],
+    "patterns": [],
+    "rule_ids": [
+      "IT-002"
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "F-IT-002-691708468b02",
+      "rule_id": "IT-002",
+      "rule_name": "Ungewöhnlich weitreichende Berechtigungen",
+      "severity": "high",
+      "title": "Ungewöhnlich weitreichende Berechtigungen für role:app-reporting-role",
+      "description": "Eine Policy gewährt Wildcard-Rechte auf alle Aktionen oder auf sicherheitskritische Dienste.",
+      "rationale": "PutRolePolicy enthält: Action \"iam:*\" auf Resource \"*\".",
+      "event_ids": [
+        "137ba7ab-31d4-5ec6-919e-d80507a5836b"
+      ],
+      "actor": "user:bob.schulz",
+      "targets": [
+        "role:app-reporting-role"
+      ],
+      "first_seen": "2026-09-14T11:40:00Z",
+      "last_seen": "2026-09-14T11:40:00Z",
+      "evidence": [
+        {
+          "event_id": "137ba7ab-31d4-5ec6-919e-d80507a5836b",
+          "field": "requestParameters.policyDocument",
+          "value": [
+            "Action \"iam:*\" auf Resource \"*\""
+          ]
+        },
+        {
+          "event_id": "137ba7ab-31d4-5ec6-919e-d80507a5836b",
+          "field": "requestParameters.policyName",
+          "value": "reporting-extra"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1098"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "137ba7ab-31d4-5ec6-919e-d80507a5836b",
+      "timestamp": "2026-09-14T11:40:00Z",
+      "event_name": "PutRolePolicy",
+      "event_source": "iam.amazonaws.com",
+      "actor": "user:bob.schulz",
+      "source_ip": "10.20.1.22",
+      "access_key_id": "AKIA5BOBSCHULZ00002",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-002-691708468b02"
+      ],
+      "rule_ids": [
+        "IT-002"
+      ],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "6f3b4e18-418a-508a-886f-5a8a22f545c6",
+      "timestamp": "2026-09-14T12:58:59Z",
+      "event_name": "ConsoleLogin",
+      "event_source": "signin.amazonaws.com",
+      "actor": "user:bob.schulz",
+      "source_ip": "10.20.1.22",
+      "access_key_id": null,
+      "outcome": "success",
+      "kind": "authentication",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "31ae448f-3bcb-53fd-9e9e-010ae6583d5f",
+      "timestamp": "2026-09-14T14:53:14Z",
+      "event_name": "GetCallerIdentity",
+      "event_source": "sts.amazonaws.com",
+      "actor": "user:bob.schulz",
+      "source_ip": "10.20.1.22",
+      "access_key_id": "AKIA5BOBSCHULZ00002",
+      "outcome": "success",
+      "kind": "reconnaissance",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "facts": [
+    {
+      "text": "2026-09-14 11:40:00 UTC: user:bob.schulz rief iam.amazonaws.com PutRolePolicy auf role:app-reporting-role auf mit Schlüssel AKIA5BOBSCHULZ00002, Quell-IP 10.20.1.22, erfolgreich.",
+      "event_ids": [
+        "137ba7ab-31d4-5ec6-919e-d80507a5836b"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 12:58:59 UTC: user:bob.schulz rief signin.amazonaws.com ConsoleLogin auf, Quell-IP 10.20.1.22, erfolgreich.",
+      "event_ids": [
+        "6f3b4e18-418a-508a-886f-5a8a22f545c6"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 14:53:14 UTC: user:bob.schulz rief sts.amazonaws.com GetCallerIdentity auf mit Schlüssel AKIA5BOBSCHULZ00002, Quell-IP 10.20.1.22, erfolgreich.",
+      "event_ids": [
+        "31ae448f-3bcb-53fd-9e9e-010ae6583d5f"
+      ],
+      "confidence": null
+    }
+  ],
+  "inferences": [],
+  "gaps": [
+    {
+      "text": "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "event_ids": [],
+      "confidence": null
+    },
+    {
+      "text": "Wie user:bob.schulz an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen).",
+      "event_ids": [],
+      "confidence": null
+    }
+  ],
+  "evidence_events": [
+    {
+      "event_id": "137ba7ab-31d4-5ec6-919e-d80507a5836b",
+      "timestamp": "2026-09-14T11:40:00Z",
+      "event_source": "iam.amazonaws.com",
+      "event_name": "PutRolePolicy",
+      "actor": "user:bob.schulz",
+      "access_key_id": "AKIA5BOBSCHULZ00002",
+      "source_ip": "10.20.1.22",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": null,
+      "request_parameters": {
+        "roleName": "app-reporting-role",
+        "policyName": "reporting-extra",
+        "policyDocument": "{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\", \"Action\": [\"s3:GetObject\", \"iam:*\"], \"Resource\": \"*\"}]}"
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "data_quality": {
+    "total_records": 452,
+    "unusable_events": 4,
+    "issue_counts": {
+      "missing_user_identity": 1,
+      "missing_event_time": 1,
+      "malformed_record": 1,
+      "invalid_event_time": 1
+    },
+    "time_gaps": [
+      {
+        "start": "2026-09-14T21:49:41Z",
+        "end": "2026-09-15T04:32:42Z",
+        "duration_minutes": 403.0,
+        "reason": "no_events"
+      }
+    ],
+    "instruction_like_event_ids": [
+      "02e31dee-4ec7-5442-88f1-b18aa0b7be83",
+      "d5a92d20-7e9f-505a-868c-85cc373039ee"
+    ],
+    "has_data_events": true
+  },
+  "recommendations": [
+    {
+      "rec_id": "revert-permissions:role:app-reporting-role",
+      "title": "Berechtigungen von role:app-reporting-role prüfen und ggf. zurücksetzen",
+      "rationale": "IT-002: PutRolePolicy enthält: Action \"iam:*\" auf Resource \"*\".",
+      "verify_steps": [
+        "aws iam list-attached-role-policies --role-name app-reporting-role",
+        "aws iam list-role-policies --role-name app-reporting-role",
+        "Change-Ticket bzw. Freigabe für die Änderung suchen"
+      ],
+      "change_steps": [
+        "aws iam delete-role-policy --role-name app-reporting-role --policy-name reporting-extra"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [
+        "F-IT-002-691708468b02"
+      ],
+      "approval": null
+    },
+    {
+      "rec_id": "contain-actor:user:bob.schulz",
+      "title": "Zugangsdaten von user:bob.schulz prüfen",
+      "rationale": "Der Akteur hat auslösende Ereignisse verursacht. Ob die Zugangsdaten kompromittiert sind, ist offen.",
+      "verify_steps": [
+        "aws iam list-access-keys --user-name bob.schulz",
+        "aws iam list-mfa-devices --user-name bob.schulz",
+        "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+      ],
+      "change_steps": [
+        "Aktive Schlüssel von bob.schulz deaktivieren (update-access-key --status Inactive)",
+        "Konsolen-Passwort zurücksetzen und MFA neu registrieren"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [],
+      "approval": null
+    }
+  ],
+  "investigation_log": [
+    {
+      "timestamp": "2026-10-20T07:03:25.513160Z",
+      "analyst": "demo",
+      "action": "report_exported",
+      "note": "Bericht per CLI erzeugt",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-20T07:03:25.520491Z",
+      "analyst": "demo",
+      "action": "ai_analysis",
+      "note": "KI-Analyse (offline-template)",
+      "details": {}
+    }
+  ],
+  "remediation": null,
+  "ai_analysis": {
+    "provider": "offline-template",
+    "summary": "1 Finding(s) aus den Regeln IT-002 betreffen user:bob.schulz. Die Zeitleiste umfasst 3 Ereignisse, davon 1 auslösend. Schweregrad laut Regeln: high.",
+    "facts": [
+      {
+        "text": "2026-09-14 11:40:00 UTC: user:bob.schulz rief iam.amazonaws.com PutRolePolicy auf role:app-reporting-role auf mit Schlüssel AKIA5BOBSCHULZ00002, Quell-IP 10.20.1.22, erfolgreich.",
+        "event_ids": [
+          "137ba7ab-31d4-5ec6-919e-d80507a5836b"
+        ]
+      }
+    ],
+    "hypotheses": [],
+    "uncertainties": [
+      "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "Wie user:bob.schulz an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen)."
+    ],
+    "investigation_steps": [
+      "aws iam list-attached-role-policies --role-name app-reporting-role",
+      "aws iam list-role-policies --role-name app-reporting-role",
+      "Change-Ticket bzw. Freigabe für die Änderung suchen",
+      "aws iam list-access-keys --user-name bob.schulz",
+      "aws iam list-mfa-devices --user-name bob.schulz",
+      "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+    ],
+    "remediation_suggestions": [
+      {
+        "text": "Berechtigungen von role:app-reporting-role prüfen und ggf. zurücksetzen",
+        "requires_approval": true
+      },
+      {
+        "text": "Zugangsdaten von user:bob.schulz prüfen",
+        "requires_approval": true
+      }
+    ],
+    "manipulation_indicators": [],
+    "validation_warnings": [],
+    "advisory_only": true
+  },
+  "disclaimer": "IdentityTrace hat keine Änderungen an Cloud-Ressourcen vorgenommen. Empfehlungen mit Freigabevermerk wurden von Menschen außerhalb des Tools umgesetzt und hier dokumentiert."
+}

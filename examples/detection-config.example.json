@@ -1,0 +1,8 @@
+{
+  "sensitive_principals": ["user:payroll-admin", "role:OrganizationAccountAccessRole"],
+  "sensitive_name_patterns": ["admin", "break-glass", "root", "prod-deploy"],
+  "trusted_account_ids": ["111122223333", "444455556666"],
+  "burst_window_minutes": 30,
+  "burst_min_events": 3,
+  "burst_min_rules": 2
+}

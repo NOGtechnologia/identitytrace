@@ -1,0 +1,261 @@
+{
+  "report_type": "identitytrace.incident",
+  "tool_version": "0.1.0",
+  "generated_at": "2026-10-20T07:03:25.520491Z",
+  "dataset": "synthetic_cloudtrail.json",
+  "incident": {
+    "id": "INC-9305bf1bcb",
+    "title": "Neuer API-Schlüssel für sensibles Konto user:break-glass-admin",
+    "severity": "high",
+    "status": "open",
+    "first_seen": "2026-09-15T15:30:00Z",
+    "last_seen": "2026-09-15T15:30:00Z",
+    "actors": [
+      "user:it-helpdesk"
+    ],
+    "entities": [
+      "key:AKIA5BREAKGLASS0099",
+      "key:AKIA5ITHELPDESK0007",
+      "user:break-glass-admin",
+      "user:it-helpdesk"
+    ],
+    "patterns": [],
+    "rule_ids": [
+      "IT-003"
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "F-IT-003-6e25597ebc49",
+      "rule_id": "IT-003",
+      "rule_name": "API-Schlüssel für sensibles Konto",
+      "severity": "high",
+      "title": "Neuer API-Schlüssel für sensibles Konto user:break-glass-admin",
+      "description": "Für ein privilegiertes oder besonders schützenswertes Konto wurde ein langlebiger Zugangsschlüssel erzeugt.",
+      "rationale": "CreateAccessKey für user:break-glass-admin; das Konto gilt als sensibel (Name enthält \"admin\"). Der Schlüssel wurde von einer anderen Identität (user:it-helpdesk) erzeugt.",
+      "event_ids": [
+        "af4ab9a9-a262-5d92-b61a-0ba6b01f7c0f"
+      ],
+      "actor": "user:it-helpdesk",
+      "targets": [
+        "user:break-glass-admin"
+      ],
+      "first_seen": "2026-09-15T15:30:00Z",
+      "last_seen": "2026-09-15T15:30:00Z",
+      "evidence": [
+        {
+          "event_id": "af4ab9a9-a262-5d92-b61a-0ba6b01f7c0f",
+          "field": "requestParameters.userName",
+          "value": "break-glass-admin"
+        },
+        {
+          "event_id": "af4ab9a9-a262-5d92-b61a-0ba6b01f7c0f",
+          "field": "responseElements.accessKey.accessKeyId",
+          "value": "AKIA5BREAKGLASS0099"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1098.001"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "af4ab9a9-a262-5d92-b61a-0ba6b01f7c0f",
+      "timestamp": "2026-09-15T15:30:00Z",
+      "event_name": "CreateAccessKey",
+      "event_source": "iam.amazonaws.com",
+      "actor": "user:it-helpdesk",
+      "source_ip": "10.20.3.5",
+      "access_key_id": "AKIA5ITHELPDESK0007",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-003-6e25597ebc49"
+      ],
+      "rule_ids": [
+        "IT-003"
+      ],
+      "instruction_like_fields": []
+    }
+  ],
+  "facts": [
+    {
+      "text": "2026-09-15 15:30:00 UTC: user:it-helpdesk rief iam.amazonaws.com CreateAccessKey auf user:break-glass-admin, neuer Schlüssel=AKIA5BREAKGLASS0099 auf mit Schlüssel AKIA5ITHELPDESK0007, Quell-IP 10.20.3.5, erfolgreich.",
+      "event_ids": [
+        "af4ab9a9-a262-5d92-b61a-0ba6b01f7c0f"
+      ],
+      "confidence": null
+    }
+  ],
+  "inferences": [
+    {
+      "text": "Der Schlüssel AKIA5BREAKGLASS0099 wurde erzeugt, im importierten Zeitraum aber nicht verwendet.",
+      "event_ids": [
+        "af4ab9a9-a262-5d92-b61a-0ba6b01f7c0f"
+      ],
+      "confidence": "hoch"
+    }
+  ],
+  "gaps": [
+    {
+      "text": "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "event_ids": [],
+      "confidence": null
+    },
+    {
+      "text": "Wie user:it-helpdesk an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen).",
+      "event_ids": [],
+      "confidence": null
+    }
+  ],
+  "evidence_events": [
+    {
+      "event_id": "af4ab9a9-a262-5d92-b61a-0ba6b01f7c0f",
+      "timestamp": "2026-09-15T15:30:00Z",
+      "event_source": "iam.amazonaws.com",
+      "event_name": "CreateAccessKey",
+      "actor": "user:it-helpdesk",
+      "access_key_id": "AKIA5ITHELPDESK0007",
+      "source_ip": "10.20.3.5",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": null,
+      "request_parameters": {
+        "userName": "break-glass-admin"
+      },
+      "response_elements": {
+        "accessKey": {
+          "userName": "break-glass-admin",
+          "accessKeyId": "AKIA5BREAKGLASS0099",
+          "status": "Active"
+        }
+      },
+      "quality_issues": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "data_quality": {
+    "total_records": 452,
+    "unusable_events": 4,
+    "issue_counts": {
+      "missing_user_identity": 1,
+      "missing_event_time": 1,
+      "malformed_record": 1,
+      "invalid_event_time": 1
+    },
+    "time_gaps": [
+      {
+        "start": "2026-09-14T21:49:41Z",
+        "end": "2026-09-15T04:32:42Z",
+        "duration_minutes": 403.0,
+        "reason": "no_events"
+      }
+    ],
+    "instruction_like_event_ids": [
+      "02e31dee-4ec7-5442-88f1-b18aa0b7be83",
+      "d5a92d20-7e9f-505a-868c-85cc373039ee"
+    ],
+    "has_data_events": true
+  },
+  "recommendations": [
+    {
+      "rec_id": "review-key:AKIA5BREAKGLASS0099",
+      "title": "Neuen Schlüssel AKIA5BREAKGLASS0099 für break-glass-admin überprüfen",
+      "rationale": "CreateAccessKey für user:break-glass-admin; das Konto gilt als sensibel (Name enthält \"admin\"). Der Schlüssel wurde von einer anderen Identität (user:it-helpdesk) erzeugt.",
+      "verify_steps": [
+        "aws iam get-access-key-last-used --access-key-id AKIA5BREAKGLASS0099",
+        "Mit dem Kontoinhaber von break-glass-admin klären, ob der Schlüssel beauftragt war"
+      ],
+      "change_steps": [
+        "aws iam update-access-key --user-name break-glass-admin --access-key-id AKIA5BREAKGLASS0099 --status Inactive",
+        "Nach Bestätigung: Schlüssel löschen und betroffene Secrets rotieren"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [
+        "F-IT-003-6e25597ebc49"
+      ],
+      "approval": null
+    },
+    {
+      "rec_id": "contain-actor:user:it-helpdesk",
+      "title": "Zugangsdaten von user:it-helpdesk prüfen",
+      "rationale": "Der Akteur hat auslösende Ereignisse verursacht. Ob die Zugangsdaten kompromittiert sind, ist offen.",
+      "verify_steps": [
+        "aws iam list-access-keys --user-name it-helpdesk",
+        "aws iam list-mfa-devices --user-name it-helpdesk",
+        "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+      ],
+      "change_steps": [
+        "Aktive Schlüssel von it-helpdesk deaktivieren (update-access-key --status Inactive)",
+        "Konsolen-Passwort zurücksetzen und MFA neu registrieren"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [],
+      "approval": null
+    }
+  ],
+  "investigation_log": [
+    {
+      "timestamp": "2026-10-20T07:03:25.520491Z",
+      "analyst": "demo",
+      "action": "report_exported",
+      "note": "Bericht per CLI erzeugt",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-20T07:03:25.520491Z",
+      "analyst": "demo",
+      "action": "ai_analysis",
+      "note": "KI-Analyse (offline-template)",
+      "details": {}
+    }
+  ],
+  "remediation": null,
+  "ai_analysis": {
+    "provider": "offline-template",
+    "summary": "1 Finding(s) aus den Regeln IT-003 betreffen user:it-helpdesk. Die Zeitleiste umfasst 1 Ereignisse, davon 1 auslösend. Schweregrad laut Regeln: high.",
+    "facts": [
+      {
+        "text": "2026-09-15 15:30:00 UTC: user:it-helpdesk rief iam.amazonaws.com CreateAccessKey auf user:break-glass-admin, neuer Schlüssel=AKIA5BREAKGLASS0099 auf mit Schlüssel AKIA5ITHELPDESK0007, Quell-IP 10.20.3.5, erfolgreich.",
+        "event_ids": [
+          "af4ab9a9-a262-5d92-b61a-0ba6b01f7c0f"
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "text": "Der Schlüssel AKIA5BREAKGLASS0099 wurde erzeugt, im importierten Zeitraum aber nicht verwendet.",
+        "event_ids": [
+          "af4ab9a9-a262-5d92-b61a-0ba6b01f7c0f"
+        ],
+        "confidence": "hoch"
+      }
+    ],
+    "uncertainties": [
+      "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "Wie user:it-helpdesk an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen)."
+    ],
+    "investigation_steps": [
+      "aws iam get-access-key-last-used --access-key-id AKIA5BREAKGLASS0099",
+      "Mit dem Kontoinhaber von break-glass-admin klären, ob der Schlüssel beauftragt war",
+      "aws iam list-access-keys --user-name it-helpdesk",
+      "aws iam list-mfa-devices --user-name it-helpdesk",
+      "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+    ],
+    "remediation_suggestions": [
+      {
+        "text": "Neuen Schlüssel AKIA5BREAKGLASS0099 für break-glass-admin überprüfen",
+        "requires_approval": true
+      },
+      {
+        "text": "Zugangsdaten von user:it-helpdesk prüfen",
+        "requires_approval": true
+      }
+    ],
+    "manipulation_indicators": [],
+    "validation_warnings": [],
+    "advisory_only": true
+  },
+  "disclaimer": "IdentityTrace hat keine Änderungen an Cloud-Ressourcen vorgenommen. Empfehlungen mit Freigabevermerk wurden von Menschen außerhalb des Tools umgesetzt und hier dokumentiert."
+}

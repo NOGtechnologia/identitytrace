@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16.4-alpine
+    environment:
+      POSTGRES_DB: identitytrace
+      POSTGRES_USER: identitytrace
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-identitytrace-local-only}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U identitytrace"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://identitytrace:${POSTGRES_PASSWORD:-identitytrace-local-only}@db:5432/identitytrace
+      IDENTITYTRACE_LLM: ${IDENTITYTRACE_LLM:-offline}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    ports:
+      # Bound to localhost only: the API has no authentication.
+      - "127.0.0.1:8000:8000"
+
+volumes:
+  pgdata:

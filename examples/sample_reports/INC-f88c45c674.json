@@ -1,0 +1,503 @@
+{
+  "report_type": "identitytrace.incident",
+  "tool_version": "0.1.0",
+  "generated_at": "2026-10-20T07:03:25.502385Z",
+  "dataset": "synthetic_cloudtrail.json",
+  "incident": {
+    "id": "INC-f88c45c674",
+    "title": "CloudTrail-Protokollierung gestoppt: org-trail (+1 weitere Findings)",
+    "severity": "critical",
+    "status": "open",
+    "first_seen": "2026-09-14T12:51:19Z",
+    "last_seen": "2026-09-14T18:24:36Z",
+    "actors": [
+      "user:svc-legacy-sync"
+    ],
+    "entities": [
+      "key:AKIA5LEGACYSYNC0009",
+      "user:svc-legacy-sync"
+    ],
+    "patterns": [],
+    "rule_ids": [
+      "IT-004"
+    ]
+  },
+  "findings": [
+    {
+      "finding_id": "F-IT-004-db925382f170",
+      "rule_id": "IT-004",
+      "rule_name": "Audit-Protokollierung deaktiviert oder verändert",
+      "severity": "critical",
+      "title": "CloudTrail-Protokollierung gestoppt: org-trail",
+      "description": "Eine Änderung an der Sicherheitsprotokollierung kann Spuren verwischen und schafft blinde Flecken.",
+      "rationale": "cloudtrail.amazonaws.com StopLogging am 2026-09-14T14:05:00+00:00 durch user:svc-legacy-sync.",
+      "event_ids": [
+        "4fb22b9c-0427-5450-970d-0cc618eacd6d"
+      ],
+      "actor": "user:svc-legacy-sync",
+      "targets": [
+        "logging:org-trail"
+      ],
+      "first_seen": "2026-09-14T14:05:00Z",
+      "last_seen": "2026-09-14T14:05:00Z",
+      "evidence": [
+        {
+          "event_id": "4fb22b9c-0427-5450-970d-0cc618eacd6d",
+          "field": "eventName",
+          "value": "StopLogging"
+        },
+        {
+          "event_id": "4fb22b9c-0427-5450-970d-0cc618eacd6d",
+          "field": "eventTime",
+          "value": "2026-09-14T14:05:00+00:00"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1562.008"
+      ]
+    },
+    {
+      "finding_id": "F-IT-004-b55451afb09a",
+      "rule_id": "IT-004",
+      "rule_name": "Audit-Protokollierung deaktiviert oder verändert",
+      "severity": "high",
+      "title": "CloudTrail-Trail-Konfiguration geändert: org-trail",
+      "description": "Eine Änderung an der Sicherheitsprotokollierung kann Spuren verwischen und schafft blinde Flecken.",
+      "rationale": "cloudtrail.amazonaws.com UpdateTrail am 2026-09-14T14:07:00+00:00 durch user:svc-legacy-sync.",
+      "event_ids": [
+        "87228f55-928f-58ee-aaa3-37e2a5af5f9e"
+      ],
+      "actor": "user:svc-legacy-sync",
+      "targets": [
+        "logging:org-trail"
+      ],
+      "first_seen": "2026-09-14T14:07:00Z",
+      "last_seen": "2026-09-14T14:07:00Z",
+      "evidence": [
+        {
+          "event_id": "87228f55-928f-58ee-aaa3-37e2a5af5f9e",
+          "field": "eventName",
+          "value": "UpdateTrail"
+        },
+        {
+          "event_id": "87228f55-928f-58ee-aaa3-37e2a5af5f9e",
+          "field": "eventTime",
+          "value": "2026-09-14T14:07:00+00:00"
+        }
+      ],
+      "attempt_failed": false,
+      "mitre_attack": [
+        "T1562.008"
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "event_id": "a74c3758-9b57-5001-b56c-b75e592d085b",
+      "timestamp": "2026-09-14T12:51:19Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:svc-legacy-sync",
+      "source_ip": "10.30.0.9",
+      "access_key_id": "AKIA5LEGACYSYNC0009",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "40e8123c-e4ee-5493-b823-daebdbac0d37",
+      "timestamp": "2026-09-14T13:38:57Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:svc-legacy-sync",
+      "source_ip": "10.30.0.9",
+      "access_key_id": "AKIA5LEGACYSYNC0009",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "4fb22b9c-0427-5450-970d-0cc618eacd6d",
+      "timestamp": "2026-09-14T14:05:00Z",
+      "event_name": "StopLogging",
+      "event_source": "cloudtrail.amazonaws.com",
+      "actor": "user:svc-legacy-sync",
+      "source_ip": "198.51.100.23",
+      "access_key_id": "AKIA5LEGACYSYNC0009",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-004-db925382f170"
+      ],
+      "rule_ids": [
+        "IT-004"
+      ],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "87228f55-928f-58ee-aaa3-37e2a5af5f9e",
+      "timestamp": "2026-09-14T14:07:00Z",
+      "event_name": "UpdateTrail",
+      "event_source": "cloudtrail.amazonaws.com",
+      "actor": "user:svc-legacy-sync",
+      "source_ip": "198.51.100.23",
+      "access_key_id": "AKIA5LEGACYSYNC0009",
+      "outcome": "success",
+      "kind": "detection",
+      "finding_ids": [
+        "F-IT-004-b55451afb09a"
+      ],
+      "rule_ids": [
+        "IT-004"
+      ],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "789952a6-4a53-5a1f-9ea7-326a2f712726",
+      "timestamp": "2026-09-14T14:30:31Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:svc-legacy-sync",
+      "source_ip": "10.30.0.9",
+      "access_key_id": "AKIA5LEGACYSYNC0009",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "8ccde7d9-fe43-52ba-a8e1-6aa256218523",
+      "timestamp": "2026-09-14T15:34:14Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:svc-legacy-sync",
+      "source_ip": "10.30.0.9",
+      "access_key_id": "AKIA5LEGACYSYNC0009",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "23908758-df07-5a6b-b394-449b08f3c6f5",
+      "timestamp": "2026-09-14T16:20:49Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:svc-legacy-sync",
+      "source_ip": "10.30.0.9",
+      "access_key_id": "AKIA5LEGACYSYNC0009",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "f22e17ca-0f77-5257-a11a-05ee0429ab87",
+      "timestamp": "2026-09-14T17:32:42Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:svc-legacy-sync",
+      "source_ip": "10.30.0.9",
+      "access_key_id": "AKIA5LEGACYSYNC0009",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "38bba8a7-47ca-5662-998d-36e8ae082599",
+      "timestamp": "2026-09-14T18:24:36Z",
+      "event_name": "PutObject",
+      "event_source": "s3.amazonaws.com",
+      "actor": "user:svc-legacy-sync",
+      "source_ip": "10.30.0.9",
+      "access_key_id": "AKIA5LEGACYSYNC0009",
+      "outcome": "success",
+      "kind": "change",
+      "finding_ids": [],
+      "rule_ids": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "facts": [
+    {
+      "text": "2026-09-14 12:51:19 UTC: user:svc-legacy-sync rief s3.amazonaws.com PutObject, bucket=acme-legacy-sync/sync/153.csv auf mit Schlüssel AKIA5LEGACYSYNC0009, Quell-IP 10.30.0.9, erfolgreich.",
+      "event_ids": [
+        "a74c3758-9b57-5001-b56c-b75e592d085b"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 13:38:57 UTC: user:svc-legacy-sync rief s3.amazonaws.com PutObject, bucket=acme-legacy-sync/sync/83.csv auf mit Schlüssel AKIA5LEGACYSYNC0009, Quell-IP 10.30.0.9, erfolgreich.",
+      "event_ids": [
+        "40e8123c-e4ee-5493-b823-daebdbac0d37"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 14:05:00 UTC: user:svc-legacy-sync rief cloudtrail.amazonaws.com StopLogging auf mit Schlüssel AKIA5LEGACYSYNC0009, Quell-IP 198.51.100.23, erfolgreich.",
+      "event_ids": [
+        "4fb22b9c-0427-5450-970d-0cc618eacd6d"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 14:07:00 UTC: user:svc-legacy-sync rief cloudtrail.amazonaws.com UpdateTrail auf mit Schlüssel AKIA5LEGACYSYNC0009, Quell-IP 198.51.100.23, erfolgreich.",
+      "event_ids": [
+        "87228f55-928f-58ee-aaa3-37e2a5af5f9e"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 14:30:31 UTC: user:svc-legacy-sync rief s3.amazonaws.com PutObject, bucket=acme-legacy-sync/sync/271.csv auf mit Schlüssel AKIA5LEGACYSYNC0009, Quell-IP 10.30.0.9, erfolgreich.",
+      "event_ids": [
+        "789952a6-4a53-5a1f-9ea7-326a2f712726"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 15:34:14 UTC: user:svc-legacy-sync rief s3.amazonaws.com PutObject, bucket=acme-legacy-sync/sync/470.csv auf mit Schlüssel AKIA5LEGACYSYNC0009, Quell-IP 10.30.0.9, erfolgreich.",
+      "event_ids": [
+        "8ccde7d9-fe43-52ba-a8e1-6aa256218523"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 16:20:49 UTC: user:svc-legacy-sync rief s3.amazonaws.com PutObject, bucket=acme-legacy-sync/sync/74.csv auf mit Schlüssel AKIA5LEGACYSYNC0009, Quell-IP 10.30.0.9, erfolgreich.",
+      "event_ids": [
+        "23908758-df07-5a6b-b394-449b08f3c6f5"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 17:32:42 UTC: user:svc-legacy-sync rief s3.amazonaws.com PutObject, bucket=acme-legacy-sync/sync/103.csv auf mit Schlüssel AKIA5LEGACYSYNC0009, Quell-IP 10.30.0.9, erfolgreich.",
+      "event_ids": [
+        "f22e17ca-0f77-5257-a11a-05ee0429ab87"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "2026-09-14 18:24:36 UTC: user:svc-legacy-sync rief s3.amazonaws.com PutObject, bucket=acme-legacy-sync/sync/494.csv auf mit Schlüssel AKIA5LEGACYSYNC0009, Quell-IP 10.30.0.9, erfolgreich.",
+      "event_ids": [
+        "38bba8a7-47ca-5662-998d-36e8ae082599"
+      ],
+      "confidence": null
+    }
+  ],
+  "inferences": [
+    {
+      "text": "user:svc-legacy-sync handelte im Vorfall von 198.51.100.23; diese IP(s) kommen für user:svc-legacy-sync sonst im importierten Zeitraum nicht vor (sonst: 10.30.0.9). Möglicher Zugriff durch Dritte; die Basislinie umfasst nur den importierten Zeitraum.",
+      "event_ids": [
+        "4fb22b9c-0427-5450-970d-0cc618eacd6d",
+        "87228f55-928f-58ee-aaa3-37e2a5af5f9e"
+      ],
+      "confidence": "mittel"
+    }
+  ],
+  "gaps": [
+    {
+      "text": "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "event_ids": [],
+      "confidence": null
+    },
+    {
+      "text": "Ab 2026-09-14 14:05:00 UTC ist die Protokollierung möglicherweise eingeschränkt (StopLogging). Fehlende Ereignisse danach beweisen keine Inaktivität.",
+      "event_ids": [
+        "4fb22b9c-0427-5450-970d-0cc618eacd6d"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "Ab 2026-09-14 14:07:00 UTC ist die Protokollierung möglicherweise eingeschränkt (UpdateTrail). Fehlende Ereignisse danach beweisen keine Inaktivität.",
+      "event_ids": [
+        "87228f55-928f-58ee-aaa3-37e2a5af5f9e"
+      ],
+      "confidence": null
+    },
+    {
+      "text": "Wie user:svc-legacy-sync an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen).",
+      "event_ids": [],
+      "confidence": null
+    }
+  ],
+  "evidence_events": [
+    {
+      "event_id": "4fb22b9c-0427-5450-970d-0cc618eacd6d",
+      "timestamp": "2026-09-14T14:05:00Z",
+      "event_source": "cloudtrail.amazonaws.com",
+      "event_name": "StopLogging",
+      "actor": "user:svc-legacy-sync",
+      "access_key_id": "AKIA5LEGACYSYNC0009",
+      "source_ip": "198.51.100.23",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": null,
+      "request_parameters": {
+        "name": "arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail"
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    },
+    {
+      "event_id": "87228f55-928f-58ee-aaa3-37e2a5af5f9e",
+      "timestamp": "2026-09-14T14:07:00Z",
+      "event_source": "cloudtrail.amazonaws.com",
+      "event_name": "UpdateTrail",
+      "actor": "user:svc-legacy-sync",
+      "access_key_id": "AKIA5LEGACYSYNC0009",
+      "source_ip": "198.51.100.23",
+      "user_agent": "aws-cli/2.15.30 Python/3.11.8 Linux/6.1 exe/x86_64",
+      "error_code": null,
+      "request_parameters": {
+        "name": "arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+        "isMultiRegionTrail": false
+      },
+      "response_elements": {},
+      "quality_issues": [],
+      "instruction_like_fields": []
+    }
+  ],
+  "data_quality": {
+    "total_records": 452,
+    "unusable_events": 4,
+    "issue_counts": {
+      "missing_user_identity": 1,
+      "missing_event_time": 1,
+      "malformed_record": 1,
+      "invalid_event_time": 1
+    },
+    "time_gaps": [
+      {
+        "start": "2026-09-14T21:49:41Z",
+        "end": "2026-09-15T04:32:42Z",
+        "duration_minutes": 403.0,
+        "reason": "no_events"
+      }
+    ],
+    "instruction_like_event_ids": [
+      "02e31dee-4ec7-5442-88f1-b18aa0b7be83",
+      "d5a92d20-7e9f-505a-868c-85cc373039ee"
+    ],
+    "has_data_events": true
+  },
+  "recommendations": [
+    {
+      "rec_id": "restore-logging:arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+      "title": "Protokollierung wiederherstellen und Lücke bewerten",
+      "rationale": "cloudtrail.amazonaws.com StopLogging am 2026-09-14T14:05:00+00:00 durch user:svc-legacy-sync.",
+      "verify_steps": [
+        "aws cloudtrail get-trail-status --name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+        "aws cloudtrail get-event-selectors --trail-name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+        "Für die Zeit ohne Protokollierung andere Quellen prüfen (Config, VPC Flow Logs, Anwendungslogs)"
+      ],
+      "change_steps": [
+        "aws cloudtrail start-logging --name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+        "Event-Selektoren und Multi-Region-Einstellung aus dem Soll-Zustand wiederherstellen"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [
+        "F-IT-004-db925382f170"
+      ],
+      "approval": null
+    },
+    {
+      "rec_id": "contain-actor:user:svc-legacy-sync",
+      "title": "Zugangsdaten von user:svc-legacy-sync prüfen",
+      "rationale": "Der Akteur hat auslösende Ereignisse verursacht. Ob die Zugangsdaten kompromittiert sind, ist offen.",
+      "verify_steps": [
+        "aws iam list-access-keys --user-name svc-legacy-sync",
+        "aws iam list-mfa-devices --user-name svc-legacy-sync",
+        "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+      ],
+      "change_steps": [
+        "Aktive Schlüssel von svc-legacy-sync deaktivieren (update-access-key --status Inactive)",
+        "Konsolen-Passwort zurücksetzen und MFA neu registrieren"
+      ],
+      "requires_approval": true,
+      "related_finding_ids": [],
+      "approval": null
+    }
+  ],
+  "investigation_log": [
+    {
+      "timestamp": "2026-10-20T07:03:25.494802Z",
+      "analyst": "demo",
+      "action": "report_exported",
+      "note": "Bericht per CLI erzeugt",
+      "details": {}
+    },
+    {
+      "timestamp": "2026-10-20T07:03:25.502385Z",
+      "analyst": "demo",
+      "action": "ai_analysis",
+      "note": "KI-Analyse (offline-template)",
+      "details": {}
+    }
+  ],
+  "remediation": null,
+  "ai_analysis": {
+    "provider": "offline-template",
+    "summary": "2 Finding(s) aus den Regeln IT-004 betreffen user:svc-legacy-sync. Die Zeitleiste umfasst 9 Ereignisse, davon 2 auslösend. Schweregrad laut Regeln: critical.",
+    "facts": [
+      {
+        "text": "2026-09-14 14:05:00 UTC: user:svc-legacy-sync rief cloudtrail.amazonaws.com StopLogging auf mit Schlüssel AKIA5LEGACYSYNC0009, Quell-IP 198.51.100.23, erfolgreich.",
+        "event_ids": [
+          "4fb22b9c-0427-5450-970d-0cc618eacd6d"
+        ]
+      },
+      {
+        "text": "2026-09-14 14:07:00 UTC: user:svc-legacy-sync rief cloudtrail.amazonaws.com UpdateTrail auf mit Schlüssel AKIA5LEGACYSYNC0009, Quell-IP 198.51.100.23, erfolgreich.",
+        "event_ids": [
+          "87228f55-928f-58ee-aaa3-37e2a5af5f9e"
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "text": "user:svc-legacy-sync handelte im Vorfall von 198.51.100.23; diese IP(s) kommen für user:svc-legacy-sync sonst im importierten Zeitraum nicht vor (sonst: 10.30.0.9). Möglicher Zugriff durch Dritte; die Basislinie umfasst nur den importierten Zeitraum.",
+        "event_ids": [
+          "4fb22b9c-0427-5450-970d-0cc618eacd6d",
+          "87228f55-928f-58ee-aaa3-37e2a5af5f9e"
+        ],
+        "confidence": "mittel"
+      }
+    ],
+    "uncertainties": [
+      "4 Datensätze im Import sind unvollständig oder fehlerhaft (ohne Zeit, Akteur oder Ereignisname) und konnten nicht zugeordnet werden. Sie könnten zu diesem Vorfall gehören.",
+      "Ab 2026-09-14 14:05:00 UTC ist die Protokollierung möglicherweise eingeschränkt (StopLogging). Fehlende Ereignisse danach beweisen keine Inaktivität.",
+      "Ab 2026-09-14 14:07:00 UTC ist die Protokollierung möglicherweise eingeschränkt (UpdateTrail). Fehlende Ereignisse danach beweisen keine Inaktivität.",
+      "Wie user:svc-legacy-sync an die verwendeten Zugangsdaten kam, geht aus CloudTrail allein nicht hervor (Endpoint-, IdP- oder VPN-Logs fehlen)."
+    ],
+    "investigation_steps": [
+      "aws cloudtrail get-trail-status --name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+      "aws cloudtrail get-event-selectors --trail-name arn:aws:cloudtrail:eu-central-1:111122223333:trail/org-trail",
+      "Für die Zeit ohne Protokollierung andere Quellen prüfen (Config, VPC Flow Logs, Anwendungslogs)",
+      "aws iam list-access-keys --user-name svc-legacy-sync",
+      "aws iam list-mfa-devices --user-name svc-legacy-sync",
+      "Mit dem Kontoinhaber Rücksprache halten (bekannter Change? eigene IP?)"
+    ],
+    "remediation_suggestions": [
+      {
+        "text": "Protokollierung wiederherstellen und Lücke bewerten",
+        "requires_approval": true
+      },
+      {
+        "text": "Zugangsdaten von user:svc-legacy-sync prüfen",
+        "requires_approval": true
+      }
+    ],
+    "manipulation_indicators": [],
+    "validation_warnings": [],
+    "advisory_only": true
+  },
+  "disclaimer": "IdentityTrace hat keine Änderungen an Cloud-Ressourcen vorgenommen. Empfehlungen mit Freigabevermerk wurden von Menschen außerhalb des Tools umgesetzt und hier dokumentiert."
+}

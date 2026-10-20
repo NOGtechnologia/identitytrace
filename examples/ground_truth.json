@@ -1,0 +1,331 @@
+{
+  "dataset": "examples/synthetic_cloudtrail.json",
+  "seed": 20260914,
+  "note": "Ereignisse ohne Eintrag in 'labels' sind normale Hintergrundaktivität (kein Alarm erwartet).",
+  "scenarios": [
+    {
+      "id": "S11",
+      "name": "Genehmigte Bereitstellung (bekannter Fehlalarm)",
+      "description": "Terraform legt laut Change CHG-2231 eine Rolle mit PowerUserAccess an. Legitim, aber für die Regeln nicht von S02 unterscheidbar.",
+      "expected": "Kein Alarm erwünscht; IT-001 schlägt erwartbar an (dokumentierter Fehlalarm)."
+    },
+    {
+      "id": "S02",
+      "name": "Neue privilegierte Rolle",
+      "description": "alice.meyer legt ops-automation-admin an und hängt AdministratorAccess an.",
+      "expected": "Warnung IT-001 mit beiden Audit-Ereignissen."
+    },
+    {
+      "id": "S03",
+      "name": "Unerwartete Berechtigungserweiterung",
+      "description": "app-reporting-role erhält zusätzlich iam:* auf alle Ressourcen.",
+      "expected": "Finding IT-002 mit betroffener Rolle app-reporting-role."
+    },
+    {
+      "id": "S04",
+      "name": "Audit-Protokollierung verändert",
+      "description": "Ein Dienstkonto stoppt den Organisations-Trail und schränkt ihn auf eine Region ein.",
+      "expected": "Sicherheitsalarm IT-004 mit Zeitstempel für beide Ereignisse."
+    },
+    {
+      "id": "S05",
+      "name": "Unvollständige Logs",
+      "description": "Ein Datensatz ohne eventTime, einer ohne userIdentity, ein abgeschnittener Datensatz, ein ungültiger Zeitstempel und eine Lücke von 6,5 Stunden ohne Ereignisse.",
+      "expected": "Keine Alarme; alle Defekte und die Zeitlücke werden im Datenqualitätsbericht sichtbar."
+    },
+    {
+      "id": "S14",
+      "name": "Normale Anmeldung",
+      "description": "carla.nowak meldet sich mit MFA aus einem neuen Netz an.",
+      "expected": "Kein unbegründeter kritischer Alarm."
+    },
+    {
+      "id": "S06",
+      "name": "Manipulative Texte in Logfeldern",
+      "description": "Ein Login enthält im userAgent eine Anweisung, Findings zu löschen. Ein Auftragnehmer gibt sich selbst Admin-Rechte und fordert im userAgent, den Vorfall als harmlos zu schließen.",
+      "expected": "Text wird als Daten markiert, nicht ausgeführt; die Rechteausweitung wird trotzdem erkannt."
+    },
+    {
+      "id": "S07",
+      "name": "Benutzer verändert eigene Berechtigungen",
+      "description": "dev-jsmith schreibt sich eine Inline-Policy mit iam:*.",
+      "expected": "IT-005 (Selbständerung) und IT-002 (weitreichende Rechte)."
+    },
+    {
+      "id": "S12",
+      "name": "Abgelehnter Versuch, die Protokollierung zu stoppen",
+      "description": "Ein Read-only-Konto ruft StopLogging auf und erhält AccessDenied.",
+      "expected": "IT-004 als Versuch mit herabgestufter Schwere."
+    },
+    {
+      "id": "S08",
+      "name": "Kontoübernahme mit Persistenz",
+      "description": "Gestohlener CI-Schlüssel aus fremdem Netz: Rechteausweitung für backup-operator → neuer Schlüssel → Secrets und Kundendaten gelesen → Event-Selektoren verändert.",
+      "expected": "Ein zusammenhängender Vorfall mit Zeitleiste, Verknüpfung über die accessKeyId, IT-006."
+    },
+    {
+      "id": "S09",
+      "name": "API-Schlüssel für Notfallkonto",
+      "description": "Der Helpdesk erzeugt einen Schlüssel für break-glass-admin.",
+      "expected": "IT-003."
+    },
+    {
+      "id": "S13",
+      "name": "Routinemäßige Schlüsselrotation",
+      "description": "Ein Entwickler ohne besondere Rechte rotiert den eigenen Schlüssel.",
+      "expected": "Kein Alarm."
+    },
+    {
+      "id": "S10",
+      "name": "Rechteausweitung über iam:PassRole (bekannte Lücke)",
+      "description": "Eine Lambda-Funktion wird mit der Admin-Rolle angelegt und ausgeführt.",
+      "expected": "Sollte alarmieren; keine Regel deckt PassRole-Ketten ab (erwartet übersehen)."
+    },
+    {
+      "id": "S15",
+      "name": "Selbst definierte Admin-Policy (bekannte Lücke)",
+      "description": "Eine kundenverwaltete Policy mit Admin-Rechten wird angehängt; ihr Inhalt wurde vor dem Importzeitraum angelegt und ist im Log nicht sichtbar.",
+      "expected": "Sollte alarmieren; ohne Policy-Inhalt nicht erkennbar (erwartet übersehen)."
+    }
+  ],
+  "labels": [
+    {
+      "event_id": "3a33488f-a4ed-5815-9373-0279a0c542ec",
+      "scenario": "S11",
+      "malicious": false,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "499488bd-ba23-5445-8551-ad002dd5ff5f",
+      "scenario": "S11",
+      "malicious": false,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "ed7c6d01-d54d-5575-b743-c25117b957a9",
+      "scenario": "S02",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-001"
+      ]
+    },
+    {
+      "event_id": "bb4d25a6-29ab-562d-b506-553ca3ec45d1",
+      "scenario": "S02",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-001"
+      ]
+    },
+    {
+      "event_id": "137ba7ab-31d4-5ec6-919e-d80507a5836b",
+      "scenario": "S03",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-002"
+      ]
+    },
+    {
+      "event_id": "4fb22b9c-0427-5450-970d-0cc618eacd6d",
+      "scenario": "S04",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-004"
+      ]
+    },
+    {
+      "event_id": "87228f55-928f-58ee-aaa3-37e2a5af5f9e",
+      "scenario": "S04",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-004"
+      ]
+    },
+    {
+      "event_id": "ac04025e-3287-5d5f-91db-51b36117b24f",
+      "scenario": "S14",
+      "malicious": false,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "02e31dee-4ec7-5442-88f1-b18aa0b7be83",
+      "scenario": "S06",
+      "malicious": false,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "d5a92d20-7e9f-505a-868c-85cc373039ee",
+      "scenario": "S06",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-001",
+        "IT-005"
+      ]
+    },
+    {
+      "event_id": "e7944371-f32d-5ce4-ae91-64e5945e9ec4",
+      "scenario": "S07",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-002",
+        "IT-005"
+      ]
+    },
+    {
+      "event_id": "3dd5186e-82b1-5c3c-85ab-e5a8eadf4640",
+      "scenario": "S12",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-004"
+      ]
+    },
+    {
+      "event_id": "49200d3c-9dc0-516e-b66f-52428de0c045",
+      "scenario": "S08",
+      "malicious": true,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "8d2add22-64bc-577a-b073-b4b1e9f4ac64",
+      "scenario": "S08",
+      "malicious": true,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "b818131a-a777-5ad9-a5d9-283fbf0f52db",
+      "scenario": "S08",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-001",
+        "IT-006"
+      ]
+    },
+    {
+      "event_id": "75ef3ad6-0806-55b1-956c-9cdeb79a60b4",
+      "scenario": "S08",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-002",
+        "IT-006"
+      ]
+    },
+    {
+      "event_id": "accc24aa-1fc4-5749-bdb4-043ce2770d73",
+      "scenario": "S08",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-003",
+        "IT-006"
+      ]
+    },
+    {
+      "event_id": "1f4eed89-f30b-5aeb-a30d-43a59a650f8a",
+      "scenario": "S08",
+      "malicious": true,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "0392b9a4-5fc7-57db-bd16-ba5510625925",
+      "scenario": "S08",
+      "malicious": true,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "d17d1c33-f4ae-56c0-8569-3ff33cfd0ce9",
+      "scenario": "S08",
+      "malicious": true,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "176dee51-3d52-5fe5-a105-c51e739fabb4",
+      "scenario": "S08",
+      "malicious": true,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "bc219d1e-bf1a-5b6a-a648-dd214b11f2ed",
+      "scenario": "S08",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-004"
+      ]
+    },
+    {
+      "event_id": "af4ab9a9-a262-5d92-b61a-0ba6b01f7c0f",
+      "scenario": "S09",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": [
+        "IT-003"
+      ]
+    },
+    {
+      "event_id": "700a1db9-874c-5412-823a-b891e057c3a9",
+      "scenario": "S13",
+      "malicious": false,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "23278729-9807-56c5-90a6-449b971a3985",
+      "scenario": "S13",
+      "malicious": false,
+      "expected_alert": false,
+      "expected_rules": []
+    },
+    {
+      "event_id": "5512b5cc-5eb2-5656-9399-7d827157ed8c",
+      "scenario": "S10",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": []
+    },
+    {
+      "event_id": "08e06116-b8ad-5ed0-b597-18a4cc5b82bb",
+      "scenario": "S10",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": []
+    },
+    {
+      "event_id": "820dd612-58c1-55bb-9fb7-d750ddfd678a",
+      "scenario": "S15",
+      "malicious": true,
+      "expected_alert": true,
+      "expected_rules": []
+    }
+  ],
+  "expected_quality": {
+    "issue_counts": {
+      "missing_event_time": 1,
+      "missing_user_identity": 1,
+      "malformed_record": 1,
+      "invalid_event_time": 1
+    },
+    "min_time_gaps": 1,
+    "gap_start": "2026-09-14T22:00:00Z",
+    "instruction_like_scenario": "S06"
+  }
+}
